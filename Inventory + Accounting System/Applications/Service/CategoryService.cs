@@ -55,10 +55,38 @@ namespace Applications.Service
        public async Task<Apiresponse< List<Category>>> GetAllCategorys()
         {
             var res = await _catRepo.GetAllCategorys();
+            if(res == null)
+            {
+                return new Apiresponse<List<Category>>
+                {
+                    Message = "Categorys not found"
+                };
+            }
             return new Apiresponse<List<Category>>
             {
                 Data = res,
                 Message = "category Fetched sucessessfully"
+            };
+        }
+        public async Task<Apiresponse<string>> Deletecategorys(int id)
+        {
+            var res =await _catRepo.Deletecatagoeys(id);
+            if (!res)
+            {
+                return new Apiresponse<string>
+                {
+                    Data = null,
+                    Message = "Category id not found",
+                    Statuscode = 400,
+                    Success = false
+                };
+            }
+            return new Apiresponse<string>
+            {
+                Data = null,
+                Message = "Deleted sucessessfully",
+                Statuscode = 200,
+                Success = true
             };
         }
     }

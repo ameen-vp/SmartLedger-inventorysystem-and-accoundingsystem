@@ -28,7 +28,7 @@ namespace Infrastructure.Contexts
 
             modelBuilder.Entity<Product>()
             .HasOne(x => x.category)
-            .WithMany(x => x.product)
+            .WithMany(x => x.Product)
             .HasForeignKey(x => x.CategoryId)
             ;
 

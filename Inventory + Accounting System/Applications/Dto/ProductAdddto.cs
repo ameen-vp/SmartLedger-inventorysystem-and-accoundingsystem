@@ -11,7 +11,8 @@ namespace Applications.Dto
         public string ProductName { get; set; }
         public string SKU { get; set; }
         public int CategoryId { get; set; }
-        public int SupplierId { get; set; }
+        public int? SupplierId { get; set; }
+        public string CategoryName { get; set; }
         public int Quantity { get; set; }
         public decimal PurchasePrice { get; set; }
         public decimal SellingPrice { get; set; }

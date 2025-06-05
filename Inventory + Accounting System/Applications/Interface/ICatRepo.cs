@@ -15,5 +15,10 @@ namespace Applications.Interface
         Task<bool> Catagoryexit(string name);
 
         Task<List<Category>> GetAllCategorys();
+
+        Task<bool> Deletecatagoeys(int id);
+
+     
+
     }
 }

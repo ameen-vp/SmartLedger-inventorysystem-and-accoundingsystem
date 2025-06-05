@@ -12,7 +12,7 @@ namespace Domain.Models
 
         public string CategoryName { get; set; }
 
-        public ICollection<Product>  product { get; set; }
+        public ICollection<Product>  Product { get; set; }
 
 
     }

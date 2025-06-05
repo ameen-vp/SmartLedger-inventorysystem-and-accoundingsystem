@@ -32,10 +32,17 @@ namespace Inventory___Accounting_System.Controllers
             }
         }
         [HttpGet("Get-categories")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> Getcat()
         {
             var res = await _catservice.GetAllCategorys();
+            return Ok(res);
+        }
+        [HttpDelete("Delete-categories")]
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var res = await _catservice.Deletecategorys(id);
             return Ok(res);
         }
     }

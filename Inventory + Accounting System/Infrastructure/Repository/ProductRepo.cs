@@ -22,8 +22,16 @@ namespace Infrastructure.Repository
         }
       public async Task Addproduct(Product product)
         {
-           await _appDbContext.Products.AddAsync(product);
-            await _appDbContext.SaveChangesAsync();
+            try
+            {
+                await _appDbContext.Products.AddAsync(product);
+                await _appDbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("❌ Error: " + ex.InnerException?.Message);
+                throw;
+            }
 
         }
        public async Task<Product> Exits(string name)
@@ -40,5 +48,24 @@ namespace Infrastructure.Repository
         {
            return  await _appDbContext.categories.AnyAsync(x => x.Id == id);
         }
+
+        public async Task<List<Product>> GetAllProducts()
+        {
+            return await _appDbContext.Products.Include(x => x.category).ToListAsync();
+        }
+        public async Task<Product> GetproductbyId(int id)
+        {
+            return await _appDbContext.Products.Include(x => x.category).FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<bool> productexit(int id)
+        {
+            return await _appDbContext.Products.AnyAsync(x => x.Id == id);
+        }
+       //public async Task UpdateProduct(Product product)
+       // {
+       //     _appDbContext.Products.Update(product);
+       //     await _appDbContext.SaveChangesAsync();
+       // }
     }
 }

@@ -16,6 +16,7 @@ namespace Domain.Models
         public int Quantity { get; set; }
         public decimal PurchasePrice { get; set; }
         public decimal SellingPrice { get; set; }
+        public string CategoryName { get; set; }
         public DateTime CreatedAt { get; set; }
 
         public Category category { get; set; }

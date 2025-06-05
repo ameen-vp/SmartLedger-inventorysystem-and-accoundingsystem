@@ -15,7 +15,8 @@ namespace Inventory___Accounting_System.Controllers
         {
             _iproductService = iproductService;
         }
-        [HttpPost]
+        [HttpPost("Add-Products")]
+        
         public async Task<IActionResult> Addproduct([FromForm] ProductAdddto productAdddto)
         {
             try
@@ -28,5 +29,26 @@ namespace Inventory___Accounting_System.Controllers
                 throw new Exception(ex.Message);
             }
         }
+        [HttpGet("Get-Allproducts")]
+        public async Task<IActionResult> Getallproducts()
+        {
+            var res = await _iproductService.GetAllproducts();
+            return Ok(res);
+        }
+        [HttpGet("Getproductbyid")]
+
+        public async Task<IActionResult>Getproductid(int id)
+        {
+            var res = await _iproductService.Getproductbyid(id);
+            return Ok(res);
+        }
+        [HttpPatch("update- products")]
+
+        public async Task<IActionResult> Updateprod(int id ,[FromForm]productupdatedto dto)
+        {
+            var res = await _iproductService.Updateproduct(id, dto);
+            return Ok(res);
+        }
+
     }
 }

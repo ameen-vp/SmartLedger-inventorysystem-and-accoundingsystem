@@ -14,5 +14,7 @@ namespace Applications.Interface
         Task<Apiresponse<CategoryAdddto>> AddCategory(CategoryAdddto categoryAdddto);
 
         Task<Apiresponse<List<Category>>> GetAllCategorys();
+
+        Task<Apiresponse<string>> Deletecategorys(int id);
     }
 }

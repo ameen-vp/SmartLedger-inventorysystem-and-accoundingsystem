@@ -13,10 +13,19 @@ namespace Applications.Interface
     {
         Task Addproduct(Product product);
 
-         Task<Product> Exits(string name);
+        Task<Product> Exits(string name);
 
-        Task UpdateProduct(Product product);
+        Task UpdateProduct(Product product );
 
         Task<bool> Categorycheck(int id);
+
+        Task<List<Product>> GetAllProducts();
+        Task<Product> GetproductbyId(int id);
+
+        Task<bool> productexit(int id);
+
+     
+
+
     }
 }

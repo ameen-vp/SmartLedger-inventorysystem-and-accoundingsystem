@@ -1,5 +1,6 @@
 ﻿using Applications.ApiResponse;
 using Applications.Dto;
+using Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,11 @@ namespace Applications.Interface
     public interface IproductService
     {
         Task<Apiresponse<List<ProductAdddto>>> AddProduct(ProductAdddto productAdddto);
+
+        Task<Apiresponse<List<Productviewdto>>> GetAllproducts();
+
+        Task<Apiresponse<Productviewdto>> Getproductbyid(int id);
+
+        Task<Apiresponse<productupdatedto>> Updateproduct(int id,productupdatedto productupdatedto);
     }
 }
