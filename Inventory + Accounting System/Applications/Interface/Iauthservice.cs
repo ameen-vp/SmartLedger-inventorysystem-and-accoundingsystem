@@ -15,7 +15,7 @@ namespace Applications.Interface
 
         Task<Apiresponse<UserResponsedto>> Loginuser(Logindto logindto);
 
-        Task<Apiresponse<string>> Deleteuser(string name);
+        Task<Apiresponse<string>> Deleteuser(string name,int userid);
 
         Task<List<User>> Getusers();
     }

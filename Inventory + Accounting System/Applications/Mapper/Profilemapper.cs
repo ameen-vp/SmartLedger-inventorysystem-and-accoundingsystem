@@ -12,6 +12,9 @@ namespace Applications.Mapper
           CreateMap<UserregisterDto,User>().ReverseMap();
             CreateMap<User, Logindto>().ReverseMap();
             CreateMap<User, UserResponsedto>().ReverseMap();
+            CreateMap <Category,CategoryAdddto>().ReverseMap();
+            CreateMap <Product, ProductAdddto>().ReverseMap();
+            CreateMap<Product, Productviewdto>().ReverseMap();
 
 
         }

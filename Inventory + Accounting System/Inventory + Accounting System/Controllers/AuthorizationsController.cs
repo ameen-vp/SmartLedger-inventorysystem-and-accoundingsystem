@@ -20,8 +20,9 @@ namespace Inventory___Accounting_System.Controllers
         }
 
             [HttpPost("register")]
-        
-         public async Task<IActionResult> Register([FromForm] UserregisterDto userregisterDto)
+        [Authorize(Roles = "Admin")]
+
+        public async Task<IActionResult> Register([FromForm] UserregisterDto userregisterDto)
             {
                 try
                 {
@@ -47,16 +48,21 @@ namespace Inventory___Accounting_System.Controllers
             }
         [HttpPost("Login")]
 
-        public async Task<IActionResult> Login(Logindto logindto)
+        public async Task<IActionResult> Login([FromForm] Logindto logindto)
         {
             var res = await _authservice.Loginuser(logindto);
             return Ok(res);
         }
-        //[Authorize(Roles = "Admin")]
-        [HttpDelete("Delete user")]
+      
+        [HttpDelete("Delete-user")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Deleteuser(string name)
         {
-            var res = await _authservice.Deleteuser(name);
+            if (HttpContext.Items["UserId"] is not int userid)
+            {
+                return Unauthorized("UserId not found in request.");
+            }
+            var res = await _authservice.Deleteuser(name, userid);
             return Ok(res);
         }
         //[Authorize(Roles = "Admin")]

@@ -16,5 +16,34 @@ namespace Infrastructure.Contexts
 
        public DbSet<User> Users { get; set; }
 
+       public DbSet<Category> categories { get; set; }
+
+        public DbSet<Product> Products { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<User>().ToTable("Users");
+
+            modelBuilder.Entity<Product>()
+            .HasOne(x => x.category)
+            .WithMany(x => x.product)
+            .HasForeignKey(x => x.CategoryId)
+            ;
+
+            modelBuilder.Entity<Product>()
+                .Property(x => x.SellingPrice)
+                .HasPrecision(18, 2);
+            modelBuilder.Entity<Product>()
+               .Property(x => x.PurchasePrice)
+               .HasPrecision(18, 2);
+
+
+
+
+        }
+
+
     }
 }

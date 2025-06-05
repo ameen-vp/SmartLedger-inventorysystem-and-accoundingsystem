@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35828.75 d17.13
+VisualStudioVersion = 17.13.35828.75
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory + Accounting System", "Inventory + Accounting System\Inventory + Accounting System.csproj", "{90A23760-4F5B-45C1-B198-67F183727174}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InventoryAccountingSystem", "Inventory + Accounting System\InventoryAccountingSystem.csproj", "{90A23760-4F5B-45C1-B198-67F183727174}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{73AEC481-8CBA-4ED4-8541-F25F88C6A5B8}"
 EndProject

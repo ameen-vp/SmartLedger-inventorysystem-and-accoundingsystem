@@ -4,16 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Models
+namespace Applications.Dto
 {
-    public class Category
+  public class CategoryAdddto
     {
-        public int Id { get; set; }
-
         public string CategoryName { get; set; }
-
-        public ICollection<Product>  product { get; set; }
-
-
     }
 }

@@ -113,7 +113,7 @@ namespace Applications.Service
             }
             catch (Exception ex)
             {
-                throw ;
+                throw new Exception(ex.Message);
             }
 
 
@@ -133,8 +133,8 @@ namespace Applications.Service
             };
 
             var token = new JwtSecurityToken(
-               issuer: _configuration["JwtSettings:Issuer"],
-               audience: _configuration["JwtSettings:Audience"],
+                 issuer: _configuration["JwtSettings:Issuer"],
+                audience: _configuration["JwtSettings:Audience"],
                 claims: claims,
                 expires: DateTime.UtcNow.AddDays(1),
                 signingCredentials: credentials
@@ -143,7 +143,7 @@ namespace Applications.Service
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-      public async Task<Apiresponse<string>> Deleteuser(string name)
+      public async Task<Apiresponse<string>> Deleteuser(string name, int userid)
         {
             var res = await _authRepo.Deleteuser(name);
             if (!res)
