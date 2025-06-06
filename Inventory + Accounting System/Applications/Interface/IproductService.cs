@@ -17,6 +17,6 @@ namespace Applications.Interface
 
         Task<Apiresponse<Productviewdto>> Getproductbyid(int id);
 
-        Task<Apiresponse<productupdatedto>> Updateproduct(int id,productupdatedto productupdatedto);
+        //Task<Apiresponse<productupdatedto>> Updateproducts(int id,productupdatedto productupdatedto);
     }
 }

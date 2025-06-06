@@ -196,47 +196,47 @@ namespace Applications.Service
             }
 
         }
-        public async Task<Apiresponse<productupdatedto>> Updateproduct(int id, productupdatedto productupdatedto)
-        {
-            var product = await _productRepo.GetproductbyId(id);
+        //public async Task<Apiresponse<productupdatedto>> Updateproducts(int id, productupdatedto productupdatedto)
+        //{
+        //    var product = await _productRepo.Idcheck(id,products);
 
-            if (product == null)
-            {
-                return new Apiresponse<productupdatedto>
-                {
-                    Data = null,
-                    Message = "Product not found",
-                    Statuscode = 404,
-                    Success = false
-                };
-            }
+        //    if (product == null)
+        //    {
+        //        return new Apiresponse<productupdatedto>
+        //        {
+        //            Data = null,
+        //            Message = "Product not found",
+        //            Statuscode = 404,
+        //            Success = false
+        //        };
+        //    }
 
-            var catcheck = await _productRepo.Categorycheck(productupdatedto.categoryId);
-            if (!catcheck)
-            {
-                return new Apiresponse<productupdatedto>
-                {
-                    Data = null,
-                    Message = "Invalid Category ID.",
-                    Statuscode = 400,
-                    Success = false
-                };
-            }
+        //    var catcheck = await _productRepo.Categorycheck(productupdatedto.categoryId);
+        //    if (!catcheck)
+        //    {
+        //        return new Apiresponse<productupdatedto>
+        //        {
+        //            Data = null,
+        //            Message = "Invalid Category ID.",
+        //            Statuscode = 400,
+        //            Success = false
+        //        };
+        //    }
 
-            product.SellingPrice = productupdatedto.Sellingprice;
-            product.Quantity = productupdatedto.Quantity;
-            product.CategoryId = productupdatedto.categoryId;
+        //    product.SellingPrice = productupdatedto.Sellingprice;
+        //    product.Quantity = productupdatedto.Quantity;
+        //    product.CategoryId = productupdatedto.categoryId;
 
-            await _productRepo.UpdateProduct(product);
+        //    await _productRepo.UpdateProduct(product);
 
-            return new Apiresponse<productupdatedto>
-            {
-                Data = productupdatedto,
-                Message = "Product updated successfully",
-                Statuscode = 200,
-                Success = true
-            };
-        }
+        //    return new Apiresponse<productupdatedto>
+        //    {
+        //        Data = productupdatedto,
+        //        Message = "Product updated successfully",
+        //        Statuscode = 200,
+        //        Success = true
+        //    };
+        //}
 
 
     }

@@ -67,5 +67,9 @@ namespace Infrastructure.Repository
        //     _appDbContext.Products.Update(product);
        //     await _appDbContext.SaveChangesAsync();
        // }
+       //public async Task<Product> Idcheck(int id)
+       // {
+       //     return await  _appDbContext.Products.AnyAsync(x => x.Id == id);
+       // }
     }
 }

@@ -42,13 +42,13 @@ namespace Inventory___Accounting_System.Controllers
             var res = await _iproductService.Getproductbyid(id);
             return Ok(res);
         }
-        [HttpPatch("update- products")]
+        //[HttpPatch("update- products")]
 
-        public async Task<IActionResult> Updateprod(int id ,[FromForm]productupdatedto dto)
-        {
-            var res = await _iproductService.Updateproduct(id, dto);
-            return Ok(res);
-        }
+        //public async Task<IActionResult> Updateprod(int id ,[FromForm]productupdatedto dto)
+        //{
+        //    var res = await _iproductService.Updateproducts(id, dto);
+        //    return Ok(res);
+        //}
 
     }
 }

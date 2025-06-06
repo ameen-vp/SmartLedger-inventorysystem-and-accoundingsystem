@@ -24,7 +24,7 @@ namespace Applications.Interface
 
         Task<bool> productexit(int id);
 
-     
+        //Task<productupdatedto> Idcheck(int id);
 
 
     }
