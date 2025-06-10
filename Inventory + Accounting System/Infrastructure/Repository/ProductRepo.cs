@@ -62,14 +62,21 @@ namespace Infrastructure.Repository
         {
             return await _appDbContext.Products.AnyAsync(x => x.Id == id);
         }
-       //public async Task UpdateProduct(Product product)
-       // {
-       //     _appDbContext.Products.Update(product);
-       //     await _appDbContext.SaveChangesAsync();
-       // }
-       //public async Task<Product> Idcheck(int id)
-       // {
-       //     return await  _appDbContext.Products.AnyAsync(x => x.Id == id);
-       // }
+       
+        public async Task<bool> Idcheck(int id)
+        {
+            return await _appDbContext.Products.AnyAsync(x => x.Id == id);
+        }
+        public async Task<bool> DeleteProducts(int id)
+        {
+            var del = await _appDbContext.Products.FindAsync(id);
+            if (del == null)
+            {
+                return false;
+            }
+            _appDbContext.Products.Remove(del);
+            await _appDbContext.SaveChangesAsync();
+            return true;
+        }
     }
 }

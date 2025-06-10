@@ -21,6 +21,16 @@ namespace Applications.Service
             _productRepo = productRepo;
             _mapper = mapper;
         }
+
+        private async Task<Product> Findproducts(int id)
+        {
+            var product = await _productRepo.GetproductbyId(id);
+            if (product == null)
+            {
+                throw new Exception("Product not found");
+            }
+            return product;
+        }
       public async  Task<Apiresponse<List<ProductAdddto>>> AddProduct(ProductAdddto productAdddto)
         {
             try
@@ -112,26 +122,16 @@ namespace Applications.Service
         {
             try
             {
-                var idcheck = await _productRepo.productexit(id);
-                if (!idcheck)
-                {
-                    return new Apiresponse<Productviewdto>
-                    {
-                        Data = null,
-                        Message = "product not found",
-                        Statuscode = 404,
-                        Success = false
-                    };
-                }
-                var prod = await _productRepo.GetproductbyId(id);
+                var prod = await Findproducts(id);
+               
+             
 
                 var dto = new Productviewdto
 
                 {
                     Id = prod.Id,
-                    //ProductName = prod.ProductName,
-                    CategoryName = prod.category.CategoryName,
                     ProductName = prod.ProductName,
+                    CategoryName = prod.category?.CategoryName,
                     SKU = prod.SKU,
                     SellingPrice = prod.SellingPrice,
                     Quantity = prod.Quantity
@@ -149,95 +149,62 @@ namespace Applications.Service
                 throw new Exception(ex.Message);
             }   
         }
-        public async Task<Apiresponse<productupdatedto>> Updateproduct(int id,productupdatedto productupdatedto)
+       
+        public async Task<Apiresponse<productupdatedto>> Updateproducts(int id, productupdatedto productupdatedto)
         {
-            try
+            var product = await Findproducts(id);
+
+           
+
+            var catcheck = await _productRepo.Categorycheck(productupdatedto.categoryId);
+            if (!catcheck)
             {
-                var check = await _productRepo.GetproductbyId(id);
-
-                if (check == null)
-                {
-                    return new Apiresponse<productupdatedto>
-                    {
-                        Data = null,
-                        Message = "Product not found",
-                        Statuscode = 404,
-                        Success = false
-                    };
-                }
-                var catcheck = await _productRepo.Categorycheck(productupdatedto.categoryId);
-                if (!catcheck)
-                {
-                    {
-                        return new Apiresponse<productupdatedto>
-                        {
-                            Data = null,
-                            Message = "Invalid Category ID.",
-                            Statuscode = 400,
-                            Success = false
-                        };
-                    }
-                }
-                var product = _mapper.Map<Product>(productupdatedto);
-
-                product.Id = id;
-
-                await _productRepo.UpdateProduct(product);
                 return new Apiresponse<productupdatedto>
                 {
-                    Data = productupdatedto,
-                    Message = "Product updated sucessfully",
-                    Success = true,
-                    Statuscode = 200
+                    Data = null,
+                    Message = "Invalid Category ID.",
+                    Statuscode = 400,
+                    Success = false
                 };
-            }catch(Exception ex)
-            {
-                throw new Exception(ex.Message);
             }
 
+            product.SellingPrice = productupdatedto.Sellingprice;
+            product.Quantity = productupdatedto.Quantity;
+            product.CategoryId= productupdatedto.categoryId;
+
+            await _productRepo.UpdateProduct(product);
+
+            return new Apiresponse<productupdatedto>
+            {
+                Data = productupdatedto,
+                Message = "Product updated successfully",
+                Statuscode = 200,
+                Success = true
+            };
         }
-        //public async Task<Apiresponse<productupdatedto>> Updateproducts(int id, productupdatedto productupdatedto)
-        //{
-        //    var product = await _productRepo.Idcheck(id,products);
+        public async Task<Apiresponse<string>> Deleteproduct(int id)
+        {
+            var prod = await _productRepo.DeleteProducts(id);
+            if (!prod)
+            {
+                return new Apiresponse<string>
+                {
+                    Data = null,
+                    Message = "Product not found or could not be deleted.",
+                    Statuscode = 404,
+                    Success = false
+                };
+            }
 
-        //    if (product == null)
-        //    {
-        //        return new Apiresponse<productupdatedto>
-        //        {
-        //            Data = null,
-        //            Message = "Product not found",
-        //            Statuscode = 404,
-        //            Success = false
-        //        };
-        //    }
-
-        //    var catcheck = await _productRepo.Categorycheck(productupdatedto.categoryId);
-        //    if (!catcheck)
-        //    {
-        //        return new Apiresponse<productupdatedto>
-        //        {
-        //            Data = null,
-        //            Message = "Invalid Category ID.",
-        //            Statuscode = 400,
-        //            Success = false
-        //        };
-        //    }
-
-        //    product.SellingPrice = productupdatedto.Sellingprice;
-        //    product.Quantity = productupdatedto.Quantity;
-        //    product.CategoryId = productupdatedto.categoryId;
-
-        //    await _productRepo.UpdateProduct(product);
-
-        //    return new Apiresponse<productupdatedto>
-        //    {
-        //        Data = productupdatedto,
-        //        Message = "Product updated successfully",
-        //        Statuscode = 200,
-        //        Success = true
-        //    };
-        //}
+            return new Apiresponse<string>
+            {
+                Data = null,
+                Message = "Deleted Sucessfully",
+                Statuscode = 200,
+                Success = true
+            };
 
 
+        }
     }
 }

@@ -20,6 +20,7 @@ namespace Infrastructure.Contexts
 
         public DbSet<Product> Products { get; set; }
 
+        public DbSet<Costomer> Costomer { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

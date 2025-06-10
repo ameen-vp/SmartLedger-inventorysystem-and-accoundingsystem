@@ -32,12 +32,14 @@ builder.Services.AddScoped<ICatRepo, Catagoryrepo>();
 builder.Services.AddScoped<ICatservice, CategoryService>();
 builder.Services.AddScoped<IProductRepo, ProductRepo>();
 builder.Services.AddScoped<IproductService, ProductService>();
+builder.Services.AddScoped<ICostmerRepo, CostomerRepo>();
+builder.Services.AddScoped<ICostomerService, CostomerService>();
 
 
-//var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-//var key = jwtSettings["Key"];
-//var issuer = jwtSettings["Issuer"];
-//var audience = jwtSettings["Audience"];
+var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+var key = jwtSettings["Key"];
+var issuer = jwtSettings["Issuer"];
+var audience = jwtSettings["Audience"];
 
 
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
