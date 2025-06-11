@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace Applications.Interface
 {
-   public interface ICostomerService
+   public interface IVendorService
     {
-        Task<Apiresponse<string>> AddCostomer(CostomerDto costomerDto);
+        Task<Apiresponse<Vendor>> Addvendors(VendorAdddto vendorAdddto);
 
-        Task<Apiresponse<List<Costomer>>> Get();
+        Task<Apiresponse<List<Vendor>>> Get();
 
-        Task<Apiresponse<string>> Delete(int id);
+        Task<Apiresponse<List<Vendor>>> GetventorById(int id);
     }
 }

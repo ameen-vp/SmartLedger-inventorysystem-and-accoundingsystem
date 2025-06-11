@@ -42,6 +42,13 @@ namespace Infrastructure.Repository
                 {
                     return false; 
                 }
+                _appDbContext.Costomer.Remove(cos);
+                await _appDbContext.SaveChangesAsync();
+                return true;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
     }

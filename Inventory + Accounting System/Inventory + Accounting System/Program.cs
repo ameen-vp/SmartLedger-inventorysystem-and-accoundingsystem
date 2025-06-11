@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using Applications.Middleware;
+using Domain.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +35,8 @@ builder.Services.AddScoped<IProductRepo, ProductRepo>();
 builder.Services.AddScoped<IproductService, ProductService>();
 builder.Services.AddScoped<ICostmerRepo, CostomerRepo>();
 builder.Services.AddScoped<ICostomerService, CostomerService>();
+builder.Services.AddScoped<IVendorService,VendorService>();
+builder.Services.AddScoped<IVentorrepo, VendorRepo>();
 
 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");

@@ -21,6 +21,8 @@ namespace Infrastructure.Contexts
         public DbSet<Product> Products { get; set; }
 
         public DbSet<Costomer> Costomer { get; set; }
+
+        public DbSet<Vendor> Vendors { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -30,21 +32,15 @@ namespace Infrastructure.Contexts
             modelBuilder.Entity<Product>()
             .HasOne(x => x.category)
             .WithMany(x => x.Product)
-            .HasForeignKey(x => x.CategoryId)
-            ;
-
+            .HasForeignKey(x => x.CategoryId);
+            
             modelBuilder.Entity<Product>()
                 .Property(x => x.SellingPrice)
                 .HasPrecision(18, 2);
             modelBuilder.Entity<Product>()
                .Property(x => x.PurchasePrice)
                .HasPrecision(18, 2);
-
-
-
-
+           
         }
-
-
     }
 }

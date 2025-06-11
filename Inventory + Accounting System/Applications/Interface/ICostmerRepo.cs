@@ -16,7 +16,6 @@ namespace Applications.Interface
 
         Task<bool> DeleteCostomers(int id);
 
-        Task<bool> Chekid(int id);
 
     }
     

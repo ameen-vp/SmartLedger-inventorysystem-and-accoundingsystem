@@ -49,7 +49,7 @@ namespace Applications.Service
         public async Task<Apiresponse<List<Costomer>>> Get()
         {
             var res = await _costmerRepo.GetCostomers();
-            if(res == null)
+            if(res == null || res.Count ==0)
             {
                 return new Apiresponse<List<Costomer>>
                 {
@@ -66,6 +66,27 @@ namespace Applications.Service
                 Statuscode = 200,
                 Success = true
             };
+        }
+        public async Task<Apiresponse<string>> Delete(int id)
+        {
+            var res = await _costmerRepo.DeleteCostomers(id);
+            if (res)
+            {
+                return new Apiresponse<string>
+                {
+                    Success = true,
+                    Message = "Costomer Deleted Successfully"
+                };
+            }
+            else
+            {
+                return new Apiresponse<string>
+                {
+                    Success = false,
+                    Statuscode = 400,
+                    Message = "Costomer Not Deleted",
+                };
+            }
         }
     }
 }

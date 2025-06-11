@@ -55,7 +55,7 @@ namespace Applications.Service
        public async Task<Apiresponse< List<Category>>> GetAllCategorys()
         {
             var res = await _catRepo.GetAllCategorys();
-            if(res == null)
+            if(res == null || res.Count == 0)
             {
                 return new Apiresponse<List<Category>>
                 {
