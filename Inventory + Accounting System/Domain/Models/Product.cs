@@ -13,14 +13,14 @@ namespace Domain.Models
         public string SKU { get; set; } // Unique Stock Keeping Unit
         public int CategoryId { get; set; }
         public int SupplierId { get; set; }
-        public int Quantity { get; set; }
+
         public decimal PurchasePrice { get; set; }
         public decimal SellingPrice { get; set; }
-        public string CategoryName { get; set; }
+        //public string CategoryName { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public Category category { get; set; }
 
-  
+       public Stocks Stocks { get; set; }
     }
 }

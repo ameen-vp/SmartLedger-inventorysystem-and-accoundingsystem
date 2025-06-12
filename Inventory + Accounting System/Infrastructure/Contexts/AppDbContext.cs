@@ -23,6 +23,8 @@ namespace Infrastructure.Contexts
         public DbSet<Costomer> Costomer { get; set; }
 
         public DbSet<Vendor> Vendors { get; set; }
+
+        public DbSet<Stocks> Stocks { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -40,7 +42,13 @@ namespace Infrastructure.Contexts
             modelBuilder.Entity<Product>()
                .Property(x => x.PurchasePrice)
                .HasPrecision(18, 2);
-           
+            modelBuilder.Entity<Stocks>()
+                .HasOne(x => x.product)
+                .WithOne(x => x.Stocks)
+                .HasForeignKey<Stocks>(x => x.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
         }
     }
 }

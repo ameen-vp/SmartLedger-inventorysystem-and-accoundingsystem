@@ -15,8 +15,8 @@ namespace Applications.Interface
 
         Task<List<Vendor>> Getventors();
 
-        Task<List<Vendor>> GetVendorsById(int id);
+      
 
-        Task<bool> Findid(int id);
+        Task<Vendor> Findid(int id);
     }
 }

@@ -10,10 +10,11 @@ namespace Domain.Models
     {
             public int Id { get; set; }
             public int ProductId { get; set; }
-            public string Type { get; set; } 
             public int Quantity { get; set; }
             public DateTime Date { get; set; } = DateTime.UtcNow;
-            public string Source { get; set; }  
+
+            public Product product { get; set; }
+      
 
     }
 }

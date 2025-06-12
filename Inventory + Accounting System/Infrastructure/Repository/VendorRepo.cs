@@ -32,13 +32,10 @@ namespace Infrastructure.Repository
         {
            return await _context.Vendors.ToListAsync();
         }
-        public async Task<List<Vendor>> GetVendorsById(int id)
+      
+        public async Task<Vendor> Findid(int id)
         {
-            return await _context.Vendors.ToListAsync();
-        }
-        public async Task<bool> Findid(int id)
-        {
-            return await _context.Vendors.AnyAsync(x => x.VendorId == id);
+            return await _context.Vendors.FirstOrDefaultAsync(x => x.VendorId == id);
         }
     }
 }

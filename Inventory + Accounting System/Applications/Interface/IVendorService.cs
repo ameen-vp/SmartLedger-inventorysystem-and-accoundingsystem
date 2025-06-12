@@ -15,6 +15,6 @@ namespace Applications.Interface
 
         Task<Apiresponse<List<Vendor>>> Get();
 
-        Task<Apiresponse<List<Vendor>>> GetventorById(int id);
+        Task<Apiresponse<Vendor>> GetventorById(int id);
     }
 }

@@ -13,7 +13,7 @@ namespace Applications.Interface
     {
         Task Addproduct(Product product);
 
-        Task<Product> Exits(string name);
+        Task<bool> Exits(string name);
 
         Task UpdateProduct(Product product );
 

@@ -35,22 +35,17 @@ namespace Applications.Service
         {
             try
             {
-                var exitproduct =await _productRepo.Exits(productAdddto.ProductName);
+                var exit =await _productRepo.Exits(productAdddto.ProductName);
                
 
-                if (exitproduct != null)
+                if (exit)
                 {
-                    
-
-                    exitproduct.Quantity += productAdddto.Quantity;
-                 
-                    await _productRepo.UpdateProduct(exitproduct);
                     return new Apiresponse<List<ProductAdddto>>
                     {
                         Data = new List<ProductAdddto> { productAdddto },
-                        Message = "Product quantity updated successfully.",
-                        Success = true,
-                        Statuscode = 200
+                        Message = "Product Already Exits",
+                        Success = false,
+                        Statuscode = 400
                     };
 
                 }
@@ -100,8 +95,8 @@ namespace Applications.Service
                     Id = x.Id,
                     ProductName = x.ProductName,
                     SKU = x.SKU,
-                    Quantity = x.Quantity,
-                    CategoryName = x.category?.CategoryName,
+
+                    SupplierId = x.SupplierId,
                     SellingPrice = x.SellingPrice
 
 
@@ -120,8 +115,7 @@ namespace Applications.Service
         }
        public async Task<Apiresponse<Productviewdto>> Getproductbyid(int id)
         {
-            try
-            {
+            
                 var prod = await Findproducts(id);
                
              
@@ -131,10 +125,9 @@ namespace Applications.Service
                 {
                     Id = prod.Id,
                     ProductName = prod.ProductName,
-                    CategoryName = prod.category?.CategoryName,
+                   SupplierId = prod.SupplierId,
                     SKU = prod.SKU,
                     SellingPrice = prod.SellingPrice,
-                    Quantity = prod.Quantity
 
                 };
                 return new Apiresponse<Productviewdto>
@@ -144,10 +137,7 @@ namespace Applications.Service
                     Success = true,
                     Statuscode = 200
                 };
-            }catch(Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }   
+            
         }
        
         public async Task<Apiresponse<productupdatedto>> Updateproducts(int id, productupdatedto productupdatedto)
@@ -169,7 +159,6 @@ namespace Applications.Service
             }
 
             product.SellingPrice = productupdatedto.Sellingprice;
-            product.Quantity = productupdatedto.Quantity;
             product.CategoryId= productupdatedto.categoryId;
 
             await _productRepo.UpdateProduct(product);

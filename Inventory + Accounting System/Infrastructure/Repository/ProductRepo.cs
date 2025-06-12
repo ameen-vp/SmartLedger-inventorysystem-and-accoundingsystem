@@ -34,9 +34,9 @@ namespace Infrastructure.Repository
             }
 
         }
-       public async Task<Product> Exits(string name)
+       public async Task<bool> Exits(string name)
         {
-            return await _appDbContext.Products.FirstOrDefaultAsync(x => x.ProductName == name);
+            return await _appDbContext.Products.AnyAsync(x => x.ProductName == name);
         }
         public async Task UpdateProduct(Product product)
         {

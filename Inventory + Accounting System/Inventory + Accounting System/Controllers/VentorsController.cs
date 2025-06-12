@@ -28,7 +28,7 @@ namespace Inventory___Accounting_System.Controllers
             return Ok(res);
         }
         [HttpGet("Get-vendors-ById")]
-        public async Task<IActionResult> Getbyid([FromForm]int id)
+        public async Task<IActionResult> Getbyid( int id)
         {
             var res = await _vendors.GetventorById(id);
             return Ok(res);

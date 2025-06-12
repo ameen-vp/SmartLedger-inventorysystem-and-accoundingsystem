@@ -71,12 +71,12 @@ namespace Applications.Service
                 Statuscode = 200
             };
         }
-        public async Task<Apiresponse<List<Vendor>>> GetventorById(int id)
+        public async Task<Apiresponse<Vendor>> GetventorById(int id)
         {
             var check = await _vendorRepo.Findid(id);
             if(check == null)
             {
-                return new Apiresponse<List<Vendor>>
+                return new Apiresponse<Vendor>
                 {
                     Message = "vemdor not dound",
                     Data = null,
@@ -84,10 +84,10 @@ namespace Applications.Service
                     Statuscode = 400
                 };
             }
-            var get = await _vendorRepo.GetVendorsById(id);
-            return new Apiresponse<List<Vendor>>
+       
+            return new Apiresponse<Vendor>
             {
-                Data = get,
+                Data = check,
                 Message = "Venter fetched sucessessfully",
                 Success = true,
                 Statuscode = 200
