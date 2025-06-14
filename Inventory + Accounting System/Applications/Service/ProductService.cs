@@ -16,6 +16,7 @@ namespace Applications.Service
     {
         private readonly IProductRepo _productRepo;
         private readonly IMapper _mapper;
+        
         public ProductService(IProductRepo productRepo,IMapper mapper)
         {
             _productRepo = productRepo;
@@ -195,5 +196,25 @@ namespace Applications.Service
 
 
         }
+        // Service method (inside ProductService)
+        public async Task<List<Productviewdto>> GetAllProductsAsync()
+        {
+            var products = await _productRepo.GetProductviewdtos();
+
+            var productDtos = products.Select(p => new Productviewdto
+            {
+                Id = p.Id,
+                ProductName = p.ProductName,
+                StockTransactionViewDtos = p.StockTransactions.Select(st => new StockTransactionViewDto
+                {
+                    Id = st.Id,
+                    TransactionDate = st.TransactionDate,
+                    Quantity = st.Quantity
+                }).ToList()
+            }).ToList();
+
+            return productDtos;
+        }
+
     }
 }

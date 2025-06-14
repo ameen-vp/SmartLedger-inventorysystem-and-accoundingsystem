@@ -18,6 +18,6 @@ namespace Applications.Interface
 
         Task<Apiresponse<string>> Delete(int id);
 
-        Task<Apiresponse<StockviewDto>> UpdateProduct()
+        Task<Apiresponse<Stockupdatedto>> Updatestock(Stockupdatedto stockupdatedto);
     }
 }

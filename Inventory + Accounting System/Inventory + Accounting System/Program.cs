@@ -39,6 +39,8 @@ builder.Services.AddScoped<IVendorService,VendorService>();
 builder.Services.AddScoped<IVentorrepo, VendorRepo>();
 builder.Services.AddScoped<IStockRepo, StockRepo>();
 builder.Services.AddScoped<IStockService, StockService>();
+builder.Services.AddScoped<IStockTransactionServices, StockTransactionService>();
+builder.Services.AddScoped<IStockTransactionsRepo, StockTransactionRepo>();
 
 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");

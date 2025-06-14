@@ -78,5 +78,10 @@ namespace Infrastructure.Repository
             await _appDbContext.SaveChangesAsync();
             return true;
         }
+      public async  Task<List<Product>> GetProductviewdtos()
+        {
+            var pro = await _appDbContext.Products.Include(x => x.StockTransactions).ToListAsync();
+            return pro;
+        }
     }
 }

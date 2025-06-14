@@ -28,6 +28,8 @@ namespace Applications.Interface
         
         Task<bool> DeleteProducts(int id);
 
+        Task<List<Product>> GetProductviewdtos();
+
 
     }
 }

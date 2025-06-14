@@ -13,8 +13,11 @@ namespace Domain.Models
             public int Quantity { get; set; }
             public DateTime Date { get; set; } = DateTime.UtcNow;
 
+            public DateTime? LastUpdated { get; set; } = DateTime.UtcNow;
+
             public Product product { get; set; }
-      
+
+           public ICollection<StockTransactions> stockTransactions { get; set; }      
 
     }
 }

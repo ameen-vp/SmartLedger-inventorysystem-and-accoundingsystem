@@ -56,5 +56,12 @@ namespace Inventory___Accounting_System.Controllers
             var res = await _iproductService.Deleteproduct(id);
             return Ok(res);
         }
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var res = await _iproductService.GetAllProductsAsync();
+            return Ok(res);
+        }
+
     }
 }

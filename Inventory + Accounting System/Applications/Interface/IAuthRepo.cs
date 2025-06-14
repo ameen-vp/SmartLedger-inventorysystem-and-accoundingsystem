@@ -16,5 +16,7 @@ namespace Applications.Interface
         Task<bool> Deleteuser(string Name);
 
         Task<List<User>> Getusers();
+
+        Task Updateuser(User user);
     }
 }

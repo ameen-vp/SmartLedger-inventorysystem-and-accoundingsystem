@@ -22,5 +22,7 @@ namespace Domain.Models
         public Category category { get; set; }
 
        public Stocks Stocks { get; set; }
+
+        public ICollection<StockTransactions> StockTransactions { get; set; } 
     }
 }

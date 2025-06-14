@@ -23,6 +23,10 @@ namespace Applications.Interface
 
         Task UpdateStock(Stocks stocks);
 
+        Task<Stocks> FindproductId(int productId);
+
+        Task<Stocks> GetstockId(int ProsuctId);
+
         
 
     }

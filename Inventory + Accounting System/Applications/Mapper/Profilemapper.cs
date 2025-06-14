@@ -20,6 +20,9 @@ namespace Applications.Mapper
             CreateMap<VendorAdddto, Vendor>().ReverseMap();
             CreateMap<Stocks,StockAdddto>().ReverseMap();
             CreateMap<StockviewDto, Stocks>().ReverseMap();
+            CreateMap<Stockupdatedto,Stocks>().ReverseMap();
+            CreateMap<AddStockTransactionDto, StockTransactions>().ReverseMap();
+            CreateMap<StockTransactions, StockTransactionViewDto>().ReverseMap();
 
         }
     }

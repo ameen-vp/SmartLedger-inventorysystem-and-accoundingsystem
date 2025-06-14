@@ -25,6 +25,8 @@ namespace Infrastructure.Contexts
         public DbSet<Vendor> Vendors { get; set; }
 
         public DbSet<Stocks> Stocks { get; set; }
+
+        public DbSet<StockTransactions> stockTransactions { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -47,6 +49,11 @@ namespace Infrastructure.Contexts
                 .WithOne(x => x.Stocks)
                 .HasForeignKey<Stocks>(x => x.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<StockTransactions>()
+                .HasOne(x => x.Stocks).
+                  WithMany()
+                .HasForeignKey(x => x.StockId)
+                .OnDelete(DeleteBehavior.NoAction);
 
 
         }

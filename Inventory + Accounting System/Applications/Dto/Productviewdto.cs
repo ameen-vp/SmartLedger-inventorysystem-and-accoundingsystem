@@ -16,5 +16,7 @@ namespace Applications.Dto
      
         public decimal SellingPrice { get; set; }
 
+        public ICollection<StockTransactionViewDto> StockTransactionViewDtos { get; set; }
+
     }
 }

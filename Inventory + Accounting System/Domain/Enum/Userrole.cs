@@ -12,4 +12,11 @@ namespace Domain.Enum
         Accountant = 2,
         Staff = 3
     }
+    public enum Transactiontype
+    {
+        Purchase,
+        Sales,
+        Return,
+        Damage
+    }
 }

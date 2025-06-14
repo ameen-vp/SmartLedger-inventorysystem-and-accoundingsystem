@@ -20,5 +20,7 @@ namespace Applications.Interface
 
         Task<Apiresponse<productupdatedto>> Updateproducts(int id, productupdatedto productupdatedto);
         Task<Apiresponse<string>> Deleteproduct(int id);
+
+        Task<List<Productviewdto>> GetAllProductsAsync();
     }
 }

@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -54,14 +55,18 @@ namespace Applications.Service
                 string hashedPassword = BCrypt.Net.BCrypt.HashPassword(userregisterDto.Password);
                 var user = _mapper.Map<User>(userregisterDto);
                 user.Password = hashedPassword;
+
+                user.RefreshToken = "";
+                user.RefreshTokenExpiryTime = DateTime.MinValue;
                 await _authRepo.Register(user);
 
                 return new Apiresponse<string>
                 {
-                    Data = null,
+                    Data = Generate_RefreshToken(),
                     Message = "User registered successfully.",
                     Success = true,
-                    Statuscode = 200
+                    Statuscode = 200,
+                
                 };
             }
             catch (Exception ex)
@@ -95,6 +100,11 @@ namespace Applications.Service
                     return new Apiresponse<UserResponsedto> { Data = null, Message = "Invalid Password", Statuscode = 400, Success = false };
                 }
                 var Token = Generate_Token(user);
+                var refreshToken = Generate_RefreshToken();
+            
+                user.RefreshToken = refreshToken;
+                user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+                await _authRepo.Updateuser(user);
                 return new Apiresponse<UserResponsedto>
                 {
                     Statuscode = 200,
@@ -104,7 +114,11 @@ namespace Applications.Service
                         Id = user.Id,
                         UserName = user.Name,
                         UserEmail = user.Email,
-                        Token = Token
+                        Token = Token,
+                        RefreshToken = Generate_RefreshToken(),
+                        RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7)
+
+
                     }
                 };
 
@@ -142,8 +156,16 @@ namespace Applications.Service
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+        private string Generate_RefreshToken()
+        {
+            var randomBytes = new byte[64];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomBytes);
+            return Convert.ToBase64String(randomBytes);
+        }
 
-      public async Task<Apiresponse<string>> Deleteuser(string name, int userid)
+
+        public async Task<Apiresponse<string>> Deleteuser(string name, int userid)
         {
             var res = await _authRepo.Deleteuser(name);
             if (!res)
@@ -167,7 +189,56 @@ namespace Applications.Service
             return await _authRepo.Getusers();
          
         }
+        public async Task<Apiresponse<string>> RefreshToken(RefreshTokenRequestDto refreshTokenRequestDto)
+        {
+            var principal = GetPrincipalFromExpiredToken(refreshTokenRequestDto.AccessToken);
+            var email = principal?.FindFirst(ClaimTypes.Email)?.Value;
+            var user = await _authRepo.Getemail(email);
+            if(user.RefreshToken != refreshTokenRequestDto.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+            {
+                return new Apiresponse<string>
+                {
+                    Data = null,
+                    Message = "Invalid refresh token",
+                    Success = false,
+                    Statuscode = 400
+                };
+            }
+            var newAccessToken = Generate_Token(user);
+            var newRefreshToken = Generate_RefreshToken();
+            user.RefreshToken = newRefreshToken;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+            await _authRepo.Updateuser(user);
+            return new Apiresponse<string>
+            {
+                Data = newAccessToken,
+                Message = "Token refreshed",
+                Success = true,
+                Statuscode = 200
+            };
+        }
+        private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Key"])),
+                ValidateLifetime = false 
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
+
+            if (securityToken is not JwtSecurityToken jwtSecurityToken ||
+                !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Invalid token");
+
+            return principal;
+        }
+
     }
-    }
+}
 
     

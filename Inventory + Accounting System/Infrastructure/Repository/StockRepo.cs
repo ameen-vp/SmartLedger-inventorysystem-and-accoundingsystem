@@ -50,5 +50,15 @@ namespace Infrastructure.Repository
             _appDbContext.Stocks.Update(stocks);
             await _appDbContext.SaveChangesAsync();
         }
+       public async Task<Stocks> FindproductId(int productId)
+        {
+            return await _appDbContext.Stocks.FirstOrDefaultAsync(x => x.ProductId == productId);
+
+        }
+        public async Task<Stocks> GetstockId(int ProductId)
+        {
+            return await _appDbContext.Stocks .Include(s => s.stockTransactions)
+                .FirstOrDefaultAsync(s => s.ProductId == ProductId);
+        }
     }
 }

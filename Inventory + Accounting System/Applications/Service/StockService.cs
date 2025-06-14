@@ -124,5 +124,30 @@ namespace Applications.Service
                 Statuscode = 200
             };
         }
+        public async Task<Apiresponse<Stockupdatedto>> Updatestock(Stockupdatedto stockupdatedto)
+        {
+            var find = await _stockRepo.FindproductId(stockupdatedto.ProductId);
+            if(find == null)
+            {
+                return new Apiresponse<Stockupdatedto>
+                {
+                    Message = "Stock not found",
+                    Data = null,
+                    Success = false,
+                    Statuscode = 404
+                };
+            }
+            find.Quantity = stockupdatedto.Quantity;
+            find.LastUpdated = stockupdatedto.LastUpdated;
+
+             var res =   _stockRepo.UpdateStock(find);
+            return new Apiresponse<Stockupdatedto>
+            {
+                Message = "Stock updated successfully",
+                Data = stockupdatedto,
+                Success = true,
+                Statuscode = 200
+            };
+        }
     }
 }

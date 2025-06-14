@@ -18,5 +18,7 @@ namespace Applications.Interface
         Task<Apiresponse<string>> Deleteuser(string name,int userid);
 
         Task<List<User>> Getusers();
+
+        Task<Apiresponse<string>> RefreshToken(RefreshTokenRequestDto refreshTokenRequestDto);
     }
 }

@@ -4,6 +4,7 @@ using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Inventory___Accounting_System.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250613062211_updatestocks")]
+    partial class updatestocks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,43 +104,6 @@ namespace Inventory___Accounting_System.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("Domain.Models.StockTransactions", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StockId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("StocksId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("TransactionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("TransactionType")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("StockId");
-
-                    b.HasIndex("StocksId");
-
-                    b.ToTable("stockTransactions");
-                });
-
             modelBuilder.Entity("Domain.Models.Stocks", b =>
                 {
                     b.Property<int>("Id")
@@ -189,13 +155,6 @@ namespace Inventory___Accounting_System.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RefreshToken")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("RefreshTokenExpiryTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("Userrole")
                         .HasColumnType("int");
 
@@ -240,29 +199,6 @@ namespace Inventory___Accounting_System.Migrations
                     b.Navigation("category");
                 });
 
-            modelBuilder.Entity("Domain.Models.StockTransactions", b =>
-                {
-                    b.HasOne("Domain.Models.Product", "product")
-                        .WithMany("StockTransactions")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Models.Stocks", "Stocks")
-                        .WithMany()
-                        .HasForeignKey("StockId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Models.Stocks", null)
-                        .WithMany("stockTransactions")
-                        .HasForeignKey("StocksId");
-
-                    b.Navigation("Stocks");
-
-                    b.Navigation("product");
-                });
-
             modelBuilder.Entity("Domain.Models.Stocks", b =>
                 {
                     b.HasOne("Domain.Models.Product", "product")
@@ -281,15 +217,8 @@ namespace Inventory___Accounting_System.Migrations
 
             modelBuilder.Entity("Domain.Models.Product", b =>
                 {
-                    b.Navigation("StockTransactions");
-
                     b.Navigation("Stocks")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Domain.Models.Stocks", b =>
-                {
-                    b.Navigation("stockTransactions");
                 });
 #pragma warning restore 612, 618
         }

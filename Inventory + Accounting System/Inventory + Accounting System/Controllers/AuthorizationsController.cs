@@ -20,7 +20,7 @@ namespace Inventory___Accounting_System.Controllers
         }
 
             [HttpPost("register")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
 
         public async Task<IActionResult> Register([FromForm] UserregisterDto userregisterDto)
             {
@@ -72,6 +72,12 @@ namespace Inventory___Accounting_System.Controllers
             var res = await _authservice.Getusers();
             return Ok(res);
         }
+        [HttpPost("Refresh-Token")]
+        public async Task<IActionResult> Refresh([FromForm] RefreshTokenRequestDto refreshTokenRequestDto)
+        {
+            var res = await _authservice.RefreshToken(refreshTokenRequestDto);
+            return Ok(res);
         }
+    }
     } 
 
