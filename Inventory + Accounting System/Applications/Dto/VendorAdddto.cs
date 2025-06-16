@@ -19,4 +19,15 @@ namespace Applications.Dto
         public string ? place { get; set; }
 
     }
+    public class vendeorviewDto
+    {
+        public string VendorName { get; set; }
+
+        public string Phone { get; set; }
+
+        public string? place { get; set; }
+
+        public ICollection<PurchaseinvoiceDto> purchaseinvoiceDtos { get; set; }
+
+    }
 }

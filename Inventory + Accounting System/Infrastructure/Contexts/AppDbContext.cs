@@ -27,6 +27,11 @@ namespace Infrastructure.Contexts
         public DbSet<Stocks> Stocks { get; set; }
 
         public DbSet<StockTransactions> stockTransactions { get; set; }
+
+        public DbSet<PurchaseInvoice> PurchaseInvoices { get; set; }
+        public DbSet<PurchaseItems> PurchaseItems { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -42,8 +47,8 @@ namespace Infrastructure.Contexts
                 .Property(x => x.SellingPrice)
                 .HasPrecision(18, 2);
             modelBuilder.Entity<Product>()
-               .Property(x => x.PurchasePrice)
-               .HasPrecision(18, 2);
+                .Property(x => x.PurchasePrice)
+                .HasPrecision(18, 2);
             modelBuilder.Entity<Stocks>()
                 .HasOne(x => x.product)
                 .WithOne(x => x.Stocks)
@@ -51,9 +56,44 @@ namespace Infrastructure.Contexts
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<StockTransactions>()
                 .HasOne(x => x.Stocks).
-                  WithMany()
+                 WithMany()
                 .HasForeignKey(x => x.StockId)
                 .OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Vendor>()
+                .HasMany(x => x.PurchaseInvoices)
+                .WithOne(x => x.Vendor)
+                .HasForeignKey(x => x.VentorsId);
+            modelBuilder.Entity<PurchaseInvoice>()
+                .HasMany(x => x.purchaseItems)
+                .WithOne(x => x.PurchaseInvoice)
+                .HasForeignKey(x => x.PurchaseInvoiceId);
+            modelBuilder.Entity<PurchaseItems>()
+                .HasOne(x => x.product)
+                .WithMany(z => z.PurchaseItems)
+                .HasForeignKey(x => x.ProductId);
+            modelBuilder.Entity<PurchaseItems>()
+                .Property(x => x.UnitPrice)
+                .HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseItems>()
+                .Property(x => x.GSTAmount)
+                .HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseItems>()
+                .Property(x => x.ToTalAmount)
+                .HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseInvoice>()
+                .Property(x => x.TotalAmount)
+                .HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseInvoice>()
+                .Property(x => x.GrantToTal)
+                .HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseItems>()
+                .Property(x => x.GSTPercentage)
+                .HasPrecision(18, 2);
+            modelBuilder.Entity<PurchaseInvoice>()
+             .Property(x => x.GST)
+             .HasPrecision(18, 2);
+
+
 
 
         }

@@ -19,5 +19,7 @@ namespace Domain.Models
 
         public string ? place { get; set; }
 
+        public ICollection<PurchaseInvoice> PurchaseInvoices { get; set; }
+
     }
 }

@@ -13,8 +13,7 @@ namespace Applications.Interface
     {
         Task<Apiresponse<Vendor>> Addvendors(VendorAdddto vendorAdddto);
 
-        Task<Apiresponse<List<Vendor>>> Get();
-
+        Task<Apiresponse<List<vendeorviewDto>>> Get();
         Task<Apiresponse<Vendor>> GetventorById(int id);
     }
 }

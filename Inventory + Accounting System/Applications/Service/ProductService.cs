@@ -208,6 +208,7 @@ namespace Applications.Service
                 StockTransactionViewDtos = p.StockTransactions.Select(st => new StockTransactionViewDto
                 {
                     Id = st.Id,
+                    ProductId = st.ProductId,
                     TransactionDate = st.TransactionDate,
                     Quantity = st.Quantity
                 }).ToList()

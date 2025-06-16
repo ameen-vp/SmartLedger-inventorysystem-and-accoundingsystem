@@ -30,7 +30,7 @@ namespace Infrastructure.Repository
         }
         public async Task<List<Vendor>> Getventors()
         {
-           return await _context.Vendors.ToListAsync();
+            return await _context.Vendors.Include(x => x.PurchaseInvoices).ToListAsync();
         }
       
         public async Task<Vendor> Findid(int id)

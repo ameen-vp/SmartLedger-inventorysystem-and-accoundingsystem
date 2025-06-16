@@ -49,12 +49,12 @@ namespace Applications.Service
                 throw new Exception(ex.Message);
             }
         }
-        public async Task<Apiresponse<List<Vendor>>> Get()
+        public async Task<Apiresponse<List<vendeorviewDto>>>Get()
         {
             var res = await _vendorRepo.Getventors();
             if(res == null)
             {
-                return new Apiresponse<List<Vendor>>
+                return new Apiresponse<List<vendeorviewDto>>
                 {
                     Data = null,
                     Message = "Vendors not found",
@@ -63,9 +63,28 @@ namespace Applications.Service
 
                 };
             }
-            return new Apiresponse<List<Vendor>>
+            var vendors = res.Select(x => new vendeorviewDto
             {
-                Data = res,
+                VendorName = x.VendorName,
+                place = x.place,
+                Phone = x.Phone,
+                purchaseinvoiceDtos = x.PurchaseInvoices.Select(y => new PurchaseinvoiceDto
+                {
+                    Id = y.Id,
+                    InvoiceNumber = y.InvoiceNumber,
+                    VentorsId = y.VentorsId,
+                    TotalAmount = y.TotalAmount,
+                    GST = y.GST,
+                    GrantToTal = y.GrantToTal
+
+
+
+                }).ToList()
+
+            }).ToList();
+            return new Apiresponse<List<vendeorviewDto>>
+            {
+                Data = vendors,
                 Message = "Vendors fetched sucessessfully",
                 Success = true,
                 Statuscode = 200

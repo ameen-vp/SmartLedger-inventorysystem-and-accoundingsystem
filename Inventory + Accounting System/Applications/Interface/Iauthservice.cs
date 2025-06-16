@@ -19,6 +19,6 @@ namespace Applications.Interface
 
         Task<List<User>> Getusers();
 
-        Task<Apiresponse<string>> RefreshToken(RefreshTokenRequestDto refreshTokenRequestDto);
+        Task<Apiresponse<TokenResponseDto>> RefreshToken(RefreshTokenRequestDto refreshTokenRequestDto);
     }
 }

@@ -24,5 +24,7 @@ namespace Domain.Models
        public Stocks Stocks { get; set; }
 
         public ICollection<StockTransactions> StockTransactions { get; set; } 
+
+        public ICollection<PurchaseItems> PurchaseItems { get; set; }
     }
 }
