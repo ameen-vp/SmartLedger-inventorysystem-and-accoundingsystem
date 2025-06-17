@@ -4,6 +4,7 @@ using Applications.Dto;
 using Applications.Interface;
 using AutoMapper;
 using Domain.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -98,21 +99,33 @@ namespace Applications.Service
                 };
 }
         }
-        public async Task<Apiresponse<List<StockTransactions>>> Get()
+        public async Task<Apiresponse<List<StockTransactionViewDto>>> Get()
         {
             try
             {
                 var get = await _stockTransactionsRepo.Gettransactions();
                 if(get == null)
                 {
-                    return new Apiresponse<List<StockTransactions>>
+                    return new Apiresponse<List<StockTransactionViewDto>>
                     {   
                         Message = "Transactions not Found",
                         Statuscode = 400
                     };
                 }
-                return new Apiresponse<List<StockTransactions>>
-                {  Data = get,
+                var transactions = get.Select(x => new StockTransactionViewDto
+                {
+                    Id = x.Id,
+                    ProductId = x.ProductId,
+                    Quantity = x.Quantity,
+                    TransactionDate = x.TransactionDate,
+                    TransactionType = x.TransactionType,
+                    StockId = x.StockId
+                    //,Productname = x.Productname
+                }).ToList();
+
+                return new Apiresponse<List<StockTransactionViewDto>>
+                
+                {  Data = transactions,
                     Message = "Transaction Fetched SucsessFully",
                     Statuscode = 200,
                 };
@@ -120,6 +133,26 @@ namespace Applications.Service
             {
                 throw new Exception(ex.Message);
             }
+          
+        }
+       public async Task<Apiresponse<string>> Delete(int id)
+        {
+            var del = await _stockTransactionsRepo.DeleteTransaction(id);
+            if(del)
+            {
+                return new Apiresponse<string>
+                {
+                    Statuscode = 200,
+                    Message = "Deleted Sucsessfully",
+                    Success = true
+                };
+            }
+            return new Apiresponse<string>
+            {
+                Message = "TransactionId Not Found",
+                Statuscode = 404,
+                Success = false
+            };
         }
     }
 }

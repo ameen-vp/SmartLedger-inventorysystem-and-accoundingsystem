@@ -17,5 +17,7 @@ namespace Applications.Interface
          Task<Stocks> GetStockByProductIdAsync(int ProductId);
 
         Task<List<StockTransactions>> Gettransactions();
+
+        Task<bool> DeleteTransaction(int id);
     }
 }

@@ -13,7 +13,8 @@ namespace Applications.Interface
     {
         Task<Apiresponse<AddStockTransactionDto>> AddTransactions(AddStockTransactionDto addStockTransactionDto);
 
-        Task<Apiresponse<List<StockTransactions>>> Get();
+        Task<Apiresponse<List<StockTransactionViewDto>>> Get();
 
+        Task<Apiresponse<string>> Delete(int id);
     }
 }

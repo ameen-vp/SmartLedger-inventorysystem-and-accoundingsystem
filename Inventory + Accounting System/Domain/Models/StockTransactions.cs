@@ -11,6 +11,8 @@ namespace Domain.Models
     {
         public int Id { get; set; }
         public int ProductId { get; set; }
+
+        //public string Productname { get; set; }
         public int Quantity { get; set; }
         public Transactiontype TransactionType { get; set; } 
         public DateTime TransactionDate { get; set; } = DateTime.UtcNow;

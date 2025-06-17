@@ -27,5 +27,11 @@ namespace Inventory___Accounting_System.Controllers
             var res = await _stockService.Get();
             return Ok(res);
         }
+        [HttpDelete("Delete-transaction")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var res = await _stockService.Delete(id);
+            return Ok(res);
+        }
     }
 }

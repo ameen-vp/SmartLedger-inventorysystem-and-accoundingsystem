@@ -36,9 +36,27 @@ namespace Infrastructure.Repository
        public async Task<List<StockTransactions>> Gettransactions()
         {
             return  await _appDbContext.stockTransactions
-                .Include(x => x.product)
+                .Include(x => x.product).ThenInclude(x => x.Stocks)
                 .ToListAsync();
             
+        }
+        public async Task<bool> DeleteTransaction(int id)
+        {
+            try
+            {
+                var del = await _appDbContext.stockTransactions.Include(x => x.product)
+                    .ThenInclude(x => x.Stocks).FirstOrDefaultAsync(x => x.Id == id);
+                if (del != null)
+                {
+                    _appDbContext.stockTransactions.Remove(del);
+                    await _appDbContext.SaveChangesAsync();
+                    return true;
+                }return false;
+                
+            }catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

@@ -211,6 +211,8 @@ namespace Applications.Service
                     ProductId = st.ProductId,
                     TransactionDate = st.TransactionDate,
                     Quantity = st.Quantity
+                    , TransactionType = st.TransactionType,
+                    StockId = st.StockId
                 }).ToList()
             }).ToList();
 

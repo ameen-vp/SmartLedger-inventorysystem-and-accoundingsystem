@@ -16,5 +16,7 @@ namespace Domain.Models
         [Required(ErrorMessage = "Phone number is required")]
         [MaxLength(10)]
         public string Phone { get; set; }
+
+        public ICollection<SalesInvoice> SalesInvoices { get; set; }
     }
 }

@@ -31,6 +31,10 @@ namespace Infrastructure.Contexts
         public DbSet<PurchaseInvoice> PurchaseInvoices { get; set; }
         public DbSet<PurchaseItems> PurchaseItems { get; set; }
 
+        public DbSet<SalesInvoice> SalesInvoices { get; set; }
+
+        public DbSet<SalesItems> SalesItems { get; set; }   
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,9 +43,9 @@ namespace Infrastructure.Contexts
             modelBuilder.Entity<User>().ToTable("Users");
 
             modelBuilder.Entity<Product>()
-            .HasOne(x => x.category)
-            .WithMany(x => x.Product)
-            .HasForeignKey(x => x.CategoryId);
+                 .HasOne(x => x.category)
+                 .WithMany(x => x.Product)
+                 .HasForeignKey(x => x.CategoryId);
             
             modelBuilder.Entity<Product>()
                 .Property(x => x.SellingPrice)
@@ -90,8 +94,25 @@ namespace Infrastructure.Contexts
                 .Property(x => x.GSTPercentage)
                 .HasPrecision(18, 2);
             modelBuilder.Entity<PurchaseInvoice>()
-             .Property(x => x.GST)
-             .HasPrecision(18, 2);
+                .Property(x => x.GST)
+                .HasPrecision(18, 2);
+            modelBuilder.Entity<StockTransactions>()
+                .Property(x => x.TransactionType)
+                .HasConversion<string>();
+            modelBuilder.Entity<SalesInvoice>()
+                .HasOne(x => x.Customer)
+                .WithMany()
+                .HasForeignKey(x => x.CustomerId).OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<SalesItems>()
+                .HasOne(x => x.SalesInvoice)
+                .WithMany(x => x.SalesItems)
+                .HasForeignKey(x => x.SalesInvoiceId).OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<SalesItems>()
+                .HasOne(x => x.product)
+                .WithMany()
+                .HasForeignKey(x => x.ProductId).OnDelete(DeleteBehavior.Restrict);
 
 
 
