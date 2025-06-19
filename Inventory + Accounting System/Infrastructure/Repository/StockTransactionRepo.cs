@@ -45,7 +45,7 @@ namespace Infrastructure.Repository
             try
             {
                 var del = await _appDbContext.stockTransactions.Include(x => x.product)
-                    .ThenInclude(x => x.Stocks).FirstOrDefaultAsync(x => x.Id == id);
+                    .FirstOrDefaultAsync(x => x.Id == id);
                 if (del != null)
                 {
                     _appDbContext.stockTransactions.Remove(del);

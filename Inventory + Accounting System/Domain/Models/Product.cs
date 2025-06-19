@@ -16,6 +16,10 @@ namespace Domain.Models
 
         public decimal PurchasePrice { get; set; }
         public decimal SellingPrice { get; set; }
+
+    
+        public decimal PurchaseGST { get; set; } = 0; 
+        public decimal SalesGst { get; set; } = 0;  
         //public string CategoryName { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 

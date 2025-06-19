@@ -33,5 +33,11 @@ namespace Inventory___Accounting_System.Controllers
             var res = await _vendors.GetventorById(id);
             return Ok(res);
         }
+        [HttpDelete("Delete vendors")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var res = await _vendors.Delete(id);
+            return Ok(res);
+        }
     }
 }

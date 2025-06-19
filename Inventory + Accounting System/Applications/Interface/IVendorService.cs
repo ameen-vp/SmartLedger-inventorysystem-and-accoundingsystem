@@ -15,5 +15,7 @@ namespace Applications.Interface
 
         Task<Apiresponse<List<vendeorviewDto>>> Get();
         Task<Apiresponse<Vendor>> GetventorById(int id);
+
+        Task<Apiresponse<string>> Delete(int id);
     }
 }

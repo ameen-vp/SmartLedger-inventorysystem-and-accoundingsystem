@@ -36,7 +36,7 @@ namespace Infrastructure.Repository
         }
        public async Task<bool> Exits(string name)
         {
-            return await _appDbContext.Products.AnyAsync(x => x.ProductName == name);
+            return await _appDbContext.Products.AnyAsync(x => x.SKU == name);
         }
         public async Task UpdateProduct(Product product)
         {
@@ -83,5 +83,9 @@ namespace Infrastructure.Repository
             var pro = await _appDbContext.Products.Include(x => x.StockTransactions).ToListAsync();
             return pro;
         }
+       //public async Task<Product> GetProductnameandsku(string name ,string sku)
+       // {
+       //     return await _appDbContext.Products.FirstOrDefaultAsync(x => x.ProductName == name && x.SKU == sku);
+       // }
     }
 }

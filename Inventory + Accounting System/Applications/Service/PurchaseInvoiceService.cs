@@ -15,11 +15,16 @@ namespace Applications.Service
     {
         private readonly IpurchaseInvoiceRepo _ipurchaseInvoiceRepo;
         private readonly IProductRepo _productRepo;
-
-        public PurchaseInvoiceService(IpurchaseInvoiceRepo ipurchaseInvoiceRepo, IProductRepo productRepo)
+        private readonly IStockRepo _stockRepo;
+        private readonly IStockTransactionsRepo _stockTransactionsRepo;
+        private readonly IStockTransactionServices _stockTransactionServices;
+        public PurchaseInvoiceService(IpurchaseInvoiceRepo ipurchaseInvoiceRepo, IProductRepo productRepo, IStockRepo stockRepo, IStockTransactionsRepo stockTransactionsRepo, IStockTransactionServices stockTransactionServices)
         {
             _ipurchaseInvoiceRepo = ipurchaseInvoiceRepo;
             _productRepo = productRepo;
+            _stockRepo = stockRepo;
+            _stockTransactionsRepo = stockTransactionsRepo;
+            _stockTransactionServices = stockTransactionServices;
         }
         public async Task<Apiresponse<string>> AddInvoices(AddPurchaseinvoiceDto addPurchaseinvoiceDto)
         {
@@ -55,9 +60,8 @@ namespace Applications.Service
                     {
                         return new Apiresponse<string>
                         {
-                            Message = "Product not found",
-                            Statuscode = 404,
-                            Success = false
+                            Statuscode = 494,
+                            Message = "Product not found"
                         };
                     }
 
@@ -75,17 +79,45 @@ namespace Applications.Service
                         Quantity = item.Quantity,
                         UnitPrice = item.UnitPrice,
                         GSTPercentage = item.GSTPercent,
-                        //GSTAmount = gst,
-                        //ToTalAmount = withoutgst
+                        GSTAmount = gst,
+                        ToTalAmount = withoutgst
                     };
                     purchaseinfo.purchaseItems.Add(items);
-
+                    var exitingstock = await _stockRepo.FindproductId(item.ProductId);
+                    int stokId = 0;
+                    if(exitingstock != null)
+                    {
+                        exitingstock.Quantity += item.Quantity;
+                        await _stockRepo.UpdateStock(exitingstock);
+                        stokId = exitingstock.Id;
+                    }
+                    else
+                    {
+                        var newstock = new Stocks
+                        {
+                            ProductId = item.ProductId,
+                            Quantity = item.Quantity,
+                            
+                        };
+                        await _stockRepo.Addstock(newstock);
+                        stokId = newstock.Id;
+                    }
+                    var txn = new AddStockTransactionDto
+                    {
+                        ProductId = item.ProductId,
+                        Quantity = item.Quantity,
+                        TransactionDate = DateTime.UtcNow,
+                        TransactionType = Domain.Enum.Transactiontype.Purchase,
+                    
+                    };
+                    await _stockTransactionServices.AddTransactions(txn);
                 }
                 purchaseinfo.TotalAmount = withoutgst;
                 purchaseinfo.GrantToTal = withgst;
                 purchaseinfo.GST = withgst - withoutgst;
 
                 await _ipurchaseInvoiceRepo.AddInvoice(purchaseinfo);
+              
 
                 return new Apiresponse<string>
                 {

@@ -37,5 +37,17 @@ namespace Infrastructure.Repository
         {
             return await _context.Vendors.FirstOrDefaultAsync(x => x.VendorId == id);
         }
+        public async Task<bool> Delete(int id)
+        {
+            var del = await _context.Vendors.FirstOrDefaultAsync(x => x.VendorId == id);
+            if(del != null)
+            {
+                 _context.Vendors.Remove(del);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+
+        }
     }
 }

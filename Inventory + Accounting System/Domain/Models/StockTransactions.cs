@@ -19,7 +19,7 @@ namespace Domain.Models
 
         public Product product { get; set; }
 
-        public Stocks Stocks { get; set; }
+        public Stocks Stock { get; set; }
 
         public int StockId { get; set; }
     }

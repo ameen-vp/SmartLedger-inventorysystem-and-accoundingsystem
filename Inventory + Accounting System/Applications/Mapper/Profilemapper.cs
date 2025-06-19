@@ -27,6 +27,9 @@ namespace Applications.Mapper
             CreateMap<PurchaseItemCreateDto, PurchaseItems>().ReverseMap();
             CreateMap<PurchaseinvoiceDto, PurchaseInvoice>().ReverseMap();
             CreateMap<PurchaseItemDto, PurchaseItems>().ReverseMap();
+            CreateMap<SalesInvoicesDto, SalesInvoice>().ReverseMap();
+            CreateMap<AddSalesItemDto, SalesItems>().ReverseMap();
+            CreateMap<ADDSalesInvoice,SalesInvoice>().ReverseMap();
         }
     }
 }

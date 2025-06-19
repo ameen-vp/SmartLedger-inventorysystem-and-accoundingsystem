@@ -59,10 +59,10 @@ namespace Infrastructure.Contexts
                 .HasForeignKey<Stocks>(x => x.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<StockTransactions>()
-                .HasOne(x => x.Stocks).
-                 WithMany()
+                .HasOne(x => x.Stock).
+                 WithMany(x =>x.stockTransactions)
                 .HasForeignKey(x => x.StockId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Vendor>()
                 .HasMany(x => x.PurchaseInvoices)
                 .WithOne(x => x.Vendor)
@@ -110,9 +110,30 @@ namespace Infrastructure.Contexts
                 .HasForeignKey(x => x.SalesInvoiceId).OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<SalesItems>()
-                .HasOne(x => x.product)
-                .WithMany()
+                .HasOne(x => x.Product)
+                .WithMany(x => x.SalesItems)
                 .HasForeignKey(x => x.ProductId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<SalesInvoice>()
+                .Property(x => x.TotalAmount)
+                .HasPrecision(18, 2);
+            modelBuilder.Entity<SalesItems>()
+                .Property(x => x.UNITPrice)
+                .HasPrecision(18, 2);
+            modelBuilder.Entity<SalesItems>()
+                .Property(x => x.Discount)
+                .HasPrecision(18, 2);
+            modelBuilder.Entity<SalesItems>()
+                .Property(x => x.Gst)
+                 .HasPrecision(18, 2);
+            modelBuilder.Entity<SalesItems>()
+                 .Property(x => x.TotalPrice)
+                 .HasPrecision(18, 2);
+            modelBuilder.Entity<Product>()
+                .Property(x => x.SalesGst)
+                .HasPrecision(18, 2);
+            modelBuilder.Entity<Product>()
+               .Property(x => x.PurchaseGST)
+               .HasPrecision(18, 2);
 
 
 

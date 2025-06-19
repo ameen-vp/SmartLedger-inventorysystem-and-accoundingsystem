@@ -48,6 +48,8 @@ builder.Services.AddScoped<IStockTransactionServices, StockTransactionService>()
 builder.Services.AddScoped<IStockTransactionsRepo, StockTransactionRepo>();
 builder.Services.AddScoped<IpurchaseInvoiceRepo, PurchaseInvoiceRepo>();
 builder.Services.AddScoped<Ipurchaseinvoiceservice, PurchaseInvoiceService>();
+builder.Services.AddScoped<ISalesInvoiceRepo, SalesInvoiceREpo>();
+builder.Services.AddScoped<ISalesInvoiceService, SalesInvoiceService>();
 
 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");

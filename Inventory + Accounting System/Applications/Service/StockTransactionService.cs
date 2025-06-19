@@ -33,13 +33,14 @@ namespace Applications.Service
                 var stock = await _stockRepo.GetstockId(addStockTransactionDto.ProductId);
                 if (stock == null)
                 {
-                    return new Apiresponse<AddStockTransactionDto>
+                    stock = new Stocks
                     {
-                        Message = "stock for Product not found",
-                        Statuscode = 404,
-                        Data = null,
-                        Success = false
+                        ProductId = addStockTransactionDto.ProductId,
+                        Quantity = 0,
+                        Date = DateTime.Now
                     };
+                  await  _stockRepo.Addstock(stock);
+                    
                 }
                 var transaction = _mapper.Map<StockTransactions>(addStockTransactionDto);
 

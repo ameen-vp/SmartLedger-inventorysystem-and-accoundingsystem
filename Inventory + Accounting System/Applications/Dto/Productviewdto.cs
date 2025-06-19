@@ -13,8 +13,12 @@ namespace Applications.Dto
         public string SKU { get; set; }
 
         public int SupplierId { get; set; }
-     
+
+        public decimal PurchasePrice { get; set; }
         public decimal SellingPrice { get; set; }
+
+        public decimal PurchaseGST { get; set; } = 0;
+        public decimal SalesGst { get; set; } = 0;
 
         public ICollection<StockTransactionViewDto> StockTransactionViewDtos { get; set; }
 

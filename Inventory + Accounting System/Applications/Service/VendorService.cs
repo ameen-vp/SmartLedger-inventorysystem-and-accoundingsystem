@@ -112,5 +112,24 @@ namespace Applications.Service
                 Statuscode = 200
             };
         }
+        public async Task<Apiresponse<string>> Delete(int id)
+        {
+            var del = await _vendorRepo.Delete(id);
+            if(del == null)
+            {
+                return new Apiresponse<string>
+                {
+                    Message = "Id not Found",
+                    Statuscode = 404
+                };
+            }
+            return new Apiresponse<string>
+            {
+                Message = "Deleted Sucsessfully",
+                Statuscode = 200,
+                Success = true,
+                Data = null
+            };
+        }
     }
 }

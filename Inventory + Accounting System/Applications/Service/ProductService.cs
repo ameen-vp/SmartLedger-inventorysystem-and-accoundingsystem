@@ -36,10 +36,10 @@ namespace Applications.Service
         {
             try
             {
-                var exit =await _productRepo.Exits(productAdddto.ProductName);
+                var exit =await _productRepo.Exits(productAdddto.SKU);
                
 
-                if (exit)
+                if (exit != null)
                 {
                     return new Apiresponse<List<ProductAdddto>>
                     {
@@ -96,9 +96,12 @@ namespace Applications.Service
                     Id = x.Id,
                     ProductName = x.ProductName,
                     SKU = x.SKU,
-
+                    
                     SupplierId = x.SupplierId,
+                    PurchasePrice = x.PurchasePrice,
                     SellingPrice = x.SellingPrice
+                    ,PurchaseGST = x.PurchaseGST,
+                    SalesGst = x.SalesGst
 
 
                 }).ToList();
@@ -128,7 +131,10 @@ namespace Applications.Service
                     ProductName = prod.ProductName,
                    SupplierId = prod.SupplierId,
                     SKU = prod.SKU,
+                    PurchasePrice = prod.PurchasePrice,
                     SellingPrice = prod.SellingPrice,
+                    PurchaseGST = prod.PurchaseGST,
+                    SalesGst = prod.SalesGst,
 
                 };
                 return new Apiresponse<Productviewdto>
@@ -196,7 +202,7 @@ namespace Applications.Service
 
 
         }
-        // Service method (inside ProductService)
+
         public async Task<List<Productviewdto>> GetAllProductsAsync()
         {
             var products = await _productRepo.GetProductviewdtos();

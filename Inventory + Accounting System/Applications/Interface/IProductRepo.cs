@@ -30,6 +30,8 @@ namespace Applications.Interface
 
         Task<List<Product>> GetProductviewdtos();
 
+        //Task<Product> GetProductnameandsku(string name, string sku);
+
 
     }
 }

@@ -39,12 +39,12 @@ namespace Inventory___Accounting_System.Controllers
             var res = await _stockService.Delete(id);
             return Ok(res);
         }
-        [HttpPut("Stock-update")]
+        //[HttpPut("Stock-update")]
 
-        public async Task<IActionResult> Update(Stockupdatedto stockupdatedto)
-        {
-            var res = await _stockService.Updatestock(stockupdatedto);
-            return Ok(res);
-        }
+        //public async Task<IActionResult> Update(Stockupdatedto stockupdatedto)
+        //{
+        //    var res = await _stockService.Updatestock(stockupdatedto);
+        //    return Ok(res);
+        //}
     }
 }

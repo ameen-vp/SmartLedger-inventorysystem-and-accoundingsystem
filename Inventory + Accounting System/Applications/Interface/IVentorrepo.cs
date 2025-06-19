@@ -18,5 +18,7 @@ namespace Applications.Interface
       
 
         Task<Vendor> Findid(int id);
+
+        Task<bool> Delete(int id);
     }
 }
