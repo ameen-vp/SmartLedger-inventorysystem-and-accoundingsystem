@@ -12,7 +12,7 @@ namespace Applications.Dto
         public string SKU { get; set; }
         public int CategoryId { get; set; }
         public int? SupplierId { get; set; }
-        public string CategoryName { get; set; }
+        //public string CategoryName { get; set; }
  
         public decimal PurchasePrice { get; set; }
         public decimal SellingPrice { get; set; }
@@ -20,4 +20,6 @@ namespace Applications.Dto
         public decimal PurchaseGST { get; set; } = 0;
         public decimal SalesGst { get; set; } = 0;
     }
+
+  
 }

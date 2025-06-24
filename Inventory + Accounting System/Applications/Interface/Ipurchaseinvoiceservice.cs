@@ -18,5 +18,7 @@ namespace Applications.Interface
         Task<Apiresponse<string>> Delete(int id);
 
         Task<Apiresponse<PurchaseinvoiceDto>> GetInvoiceById(int id);
+
+       
     }
 }

@@ -23,6 +23,10 @@ namespace Applications.Interface
 
         Task <SalesInvoice> GetInvoiceId(int id);
 
+        Task<SalesInvoice?> GetInvoiceWithDetailsAsync(int id);
+
+
+
     }
 
     public interface ISalesInvoiceService
@@ -32,5 +36,9 @@ namespace Applications.Interface
         Task<Apiresponse<List<SalesInvoicesDto>>>Get();
 
         Task<Apiresponse<string>> UpdateSataus(UpdateStatusDto dto);
+
+        Task<Apiresponse<SalesInvoice>> GetInvoiceById(int id);
+
+        Task<byte[]?> GenerateInvoicePdfAsync(int id);
     }
 }

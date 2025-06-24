@@ -16,10 +16,12 @@ namespace Domain.Models
 
         public int ProductId { get; set; }
 
+        //public string ProductName { get; set; }
+
+        public decimal UnitPrice { get; set; }
         public Product product { get; set; }
         public int Quantity { get; set; }
 
-        public decimal UnitPrice { get; set; }
 
         public decimal GSTPercentage { get; set; }
 

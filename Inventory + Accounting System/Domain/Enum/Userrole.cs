@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,5 +33,23 @@ namespace Domain.Enum
         PAID,
         [EnumMember(Value = "CANCELLED")]
         CANCELLED
+    }
+    public enum AccountType
+    {
+        [EnumMember(Value = "ASSET")]
+
+         ASSET,
+        [EnumMember (Value = "LIABILITY")]
+
+        LIABLITY,
+        [EnumMember(Value = "INCOME")]
+
+        INCOME,
+        [EnumMember (Value = "EXPENSE")]
+
+        EXPENSE,
+        [EnumMember (Value = "EQUITY")]
+        EQUITY
+
     }
 }

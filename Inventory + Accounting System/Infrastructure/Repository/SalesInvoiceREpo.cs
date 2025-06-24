@@ -54,7 +54,14 @@ namespace Infrastructure.Repository
         }
        public async Task<SalesInvoice> GetInvoiceId(int id)
         {
-            return await _appDbContext.SalesInvoices.FindAsync(id);
+            return await _appDbContext.SalesInvoices.Include(x => x.SalesItems).FirstOrDefaultAsync(x => x.Id == id);
+        }
+        public async Task<SalesInvoice?> GetInvoiceWithDetailsAsync(int id)
+        {
+            return await _appDbContext.SalesInvoices
+                .Include(i => i.SalesItems)
+                    .ThenInclude(si => si.Product)
+                .FirstOrDefaultAsync(i => i.Id == id);
         }
     }
 }

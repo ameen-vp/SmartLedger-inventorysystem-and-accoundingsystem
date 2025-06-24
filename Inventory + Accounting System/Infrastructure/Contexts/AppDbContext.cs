@@ -35,6 +35,8 @@ namespace Infrastructure.Contexts
 
         public DbSet<SalesItems> SalesItems { get; set; }   
 
+        public DbSet<Accounts> Accounts { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -132,8 +134,9 @@ namespace Infrastructure.Contexts
                 .Property(x => x.SalesGst)
                 .HasPrecision(18, 2);
             modelBuilder.Entity<Product>()
-               .Property(x => x.PurchaseGST)
-               .HasPrecision(18, 2);
+                .Property(x => x.PurchaseGST)
+                .HasPrecision(18, 2);
+            
 
 
 

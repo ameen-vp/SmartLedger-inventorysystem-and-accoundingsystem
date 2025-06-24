@@ -55,7 +55,7 @@ namespace Inventory___Accounting_System.Controllers
         }
       
         [HttpDelete("Delete-user")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Deleteuser(string name)
         {
             if (HttpContext.Items["UserId"] is not int userid)

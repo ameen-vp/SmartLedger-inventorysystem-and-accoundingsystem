@@ -18,5 +18,8 @@ namespace Applications.Interface
         Task<PurchaseInvoice> GetInvoiceById(int id);
 
         Task<bool> Deleteinvoice(int id);
+
+        Task UpdateInvoice(PurchaseInvoice invoice);
+
     }
 }

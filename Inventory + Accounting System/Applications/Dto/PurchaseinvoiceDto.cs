@@ -40,4 +40,10 @@ namespace Applications.Dto
 
         //public decimal ToTalAmount { get; set; }
     }
+    public class CreateInvoiceDraftDto
+    {
+        public int VendorId { get; set; }
+        public DateTime InvoiceDate { get; set; }
+    }
+
 }

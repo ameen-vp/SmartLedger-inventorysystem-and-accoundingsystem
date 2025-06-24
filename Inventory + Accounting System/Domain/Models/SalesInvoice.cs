@@ -1,6 +1,7 @@
 ﻿using Domain.Enum;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Domain.Models
 {
@@ -13,7 +14,7 @@ namespace Domain.Models
 
         public int CustomerId { get; set; }
 
-        public InvoiceStatus Status { get; set; } = InvoiceStatus.PENDING; 
+        public InvoiceStatus Status { get; set; } = InvoiceStatus.PAID; 
 
         public Costomer Customer { get; set; }  
         public decimal TotalAmount { get; set; }
@@ -42,8 +43,8 @@ namespace Domain.Models
 
         public decimal TotalPrice { get; set; } 
 
-        public int SalesInvoiceId { get; set; }  
-
+        public int SalesInvoiceId { get; set; }
+        [JsonIgnore]
         public SalesInvoice SalesInvoice { get; set; }  
     }
 }

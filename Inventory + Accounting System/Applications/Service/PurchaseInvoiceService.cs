@@ -76,11 +76,12 @@ namespace Applications.Service
                     var items = new PurchaseItems
                     {
                         ProductId = item.ProductId,
+                        //ProductName = product.ProductName,
                         Quantity = item.Quantity,
                         UnitPrice = item.UnitPrice,
                         GSTPercentage = item.GSTPercent,
                         GSTAmount = gst,
-                        ToTalAmount = withoutgst
+                        ToTalAmount = itemtotal
                     };
                     purchaseinfo.purchaseItems.Add(items);
                     var exitingstock = await _stockRepo.FindproductId(item.ProductId);
@@ -247,5 +248,6 @@ namespace Applications.Service
                 throw new Exception(ex.Message);
             }
         }
-    } 
+       
+    }
 }

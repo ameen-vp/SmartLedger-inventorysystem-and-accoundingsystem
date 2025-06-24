@@ -39,7 +39,7 @@ namespace Applications.Service
                 var exit =await _productRepo.Exits(productAdddto.SKU);
                
 
-                if (exit != null)
+                if (exit)
                 {
                     return new Apiresponse<List<ProductAdddto>>
                     {
@@ -61,9 +61,17 @@ namespace Applications.Service
                         Statuscode = 400,
 
                     };
-                }
+                } 
+           
                 var prod = _mapper.Map<Product>(productAdddto);
                 await _productRepo.Addproduct(prod);
+                var prize = await _productRepo.FetchPurchasePrize(prod.Id);
+              if(prize > 0)
+                {
+                    prod.PurchasePrice = prize;
+                    await _productRepo.UpdateProduct(prod);
+                }
+               
                 return new Apiresponse<List<ProductAdddto>>
                 {
                     Data = new List<ProductAdddto> { productAdddto },

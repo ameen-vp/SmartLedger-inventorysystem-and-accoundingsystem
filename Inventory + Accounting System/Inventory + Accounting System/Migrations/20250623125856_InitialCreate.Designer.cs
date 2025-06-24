@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Inventory___Accounting_System.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250615122628_purchaseinvoices")]
-    partial class purchaseinvoices
+    [Migration("20250623125856_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,26 @@ namespace Inventory___Accounting_System.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Domain.Models.Accounts", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Accounts");
+                });
 
             modelBuilder.Entity("Domain.Models.Category", b =>
                 {
@@ -82,6 +102,10 @@ namespace Inventory___Accounting_System.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("PurchaseGST")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<decimal>("PurchasePrice")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
@@ -89,6 +113,10 @@ namespace Inventory___Accounting_System.Migrations
                     b.Property<string>("SKU")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("SalesGst")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("SellingPrice")
                         .HasPrecision(18, 2)
@@ -183,6 +211,89 @@ namespace Inventory___Accounting_System.Migrations
                     b.ToTable("PurchaseItems");
                 });
 
+            modelBuilder.Entity("Domain.Models.SalesInvoice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CostomerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("InvoiceDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("InvoiceNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Remarks")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CostomerId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("SalesInvoices");
+                });
+
+            modelBuilder.Entity("Domain.Models.SalesItems", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Discount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Gst")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SalesInvoiceId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("UNITPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("SalesInvoiceId");
+
+                    b.ToTable("SalesItems");
+                });
+
             modelBuilder.Entity("Domain.Models.StockTransactions", b =>
                 {
                     b.Property<int>("Id")
@@ -200,22 +311,18 @@ namespace Inventory___Accounting_System.Migrations
                     b.Property<int>("StockId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("StocksId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("TransactionDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("TransactionType")
-                        .HasColumnType("int");
+                    b.Property<string>("TransactionType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
 
                     b.HasIndex("StockId");
-
-                    b.HasIndex("StocksId");
 
                     b.ToTable("stockTransactions");
                 });
@@ -352,6 +459,40 @@ namespace Inventory___Accounting_System.Migrations
                     b.Navigation("product");
                 });
 
+            modelBuilder.Entity("Domain.Models.SalesInvoice", b =>
+                {
+                    b.HasOne("Domain.Models.Costomer", null)
+                        .WithMany("SalesInvoices")
+                        .HasForeignKey("CostomerId");
+
+                    b.HasOne("Domain.Models.Costomer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("Domain.Models.SalesItems", b =>
+                {
+                    b.HasOne("Domain.Models.Product", "Product")
+                        .WithMany("SalesItems")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Models.SalesInvoice", "SalesInvoice")
+                        .WithMany("SalesItems")
+                        .HasForeignKey("SalesInvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("SalesInvoice");
+                });
+
             modelBuilder.Entity("Domain.Models.StockTransactions", b =>
                 {
                     b.HasOne("Domain.Models.Product", "product")
@@ -360,17 +501,13 @@ namespace Inventory___Accounting_System.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Models.Stocks", "Stocks")
-                        .WithMany()
+                    b.HasOne("Domain.Models.Stocks", "Stock")
+                        .WithMany("stockTransactions")
                         .HasForeignKey("StockId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Models.Stocks", null)
-                        .WithMany("stockTransactions")
-                        .HasForeignKey("StocksId");
-
-                    b.Navigation("Stocks");
+                    b.Navigation("Stock");
 
                     b.Navigation("product");
                 });
@@ -391,9 +528,16 @@ namespace Inventory___Accounting_System.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("Domain.Models.Costomer", b =>
+                {
+                    b.Navigation("SalesInvoices");
+                });
+
             modelBuilder.Entity("Domain.Models.Product", b =>
                 {
                     b.Navigation("PurchaseItems");
+
+                    b.Navigation("SalesItems");
 
                     b.Navigation("StockTransactions");
 
@@ -404,6 +548,11 @@ namespace Inventory___Accounting_System.Migrations
             modelBuilder.Entity("Domain.Models.PurchaseInvoice", b =>
                 {
                     b.Navigation("purchaseItems");
+                });
+
+            modelBuilder.Entity("Domain.Models.SalesInvoice", b =>
+                {
+                    b.Navigation("SalesItems");
                 });
 
             modelBuilder.Entity("Domain.Models.Stocks", b =>

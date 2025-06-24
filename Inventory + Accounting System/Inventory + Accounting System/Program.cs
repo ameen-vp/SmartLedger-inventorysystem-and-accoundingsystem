@@ -11,6 +11,7 @@ using System.Text;
 using Applications.Middleware;
 using Domain.Models;
 using System.Text.Json.Serialization;
+using Application.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,6 +51,10 @@ builder.Services.AddScoped<IpurchaseInvoiceRepo, PurchaseInvoiceRepo>();
 builder.Services.AddScoped<Ipurchaseinvoiceservice, PurchaseInvoiceService>();
 builder.Services.AddScoped<ISalesInvoiceRepo, SalesInvoiceREpo>();
 builder.Services.AddScoped<ISalesInvoiceService, SalesInvoiceService>();
+builder.Services.AddScoped<IIInvoicePdfGenerator, InvoicePdfGenerator>();
+builder.Services.AddScoped<IAccountRepo, AccountRepo>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+
 
 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");

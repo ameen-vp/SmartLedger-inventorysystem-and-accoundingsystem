@@ -32,6 +32,8 @@ namespace Applications.Interface
 
         //Task<Product> GetProductnameandsku(string name, string sku);
 
+        Task<decimal> FetchPurchasePrize(int ProductId);
+
 
     }
 }

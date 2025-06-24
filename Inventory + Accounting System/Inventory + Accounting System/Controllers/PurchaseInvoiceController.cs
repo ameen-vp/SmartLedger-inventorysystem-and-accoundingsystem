@@ -1,5 +1,6 @@
 ﻿using Applications.Dto;
 using Applications.Interface;
+using Applications.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,7 +16,7 @@ namespace Inventory___Accounting_System.Controllers
             _ipurchaseinvoiceservice = ipurchaseinvoiceservice;
         }
         [HttpPost("Add-invoice")]
-        public async Task<IActionResult> Addinvoices([FromBody]AddPurchaseinvoiceDto addPurchaseinvoiceDto)
+        public async Task<IActionResult> Addinvoices([FromBody] AddPurchaseinvoiceDto addPurchaseinvoiceDto)
         {
             var res = await _ipurchaseinvoiceservice.AddInvoices(addPurchaseinvoiceDto);
             return Ok(res);
@@ -40,5 +41,6 @@ namespace Inventory___Accounting_System.Controllers
             var res = await _ipurchaseinvoiceservice.GetInvoiceById(id);
             return Ok(res);
         }
+   
     }
 }

@@ -22,6 +22,26 @@ namespace Inventory___Accounting_System.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Domain.Models.Accounts", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Accounts");
+                });
+
             modelBuilder.Entity("Domain.Models.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -288,9 +308,6 @@ namespace Inventory___Accounting_System.Migrations
                     b.Property<int>("StockId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("StocksId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("TransactionDate")
                         .HasColumnType("datetime2");
 
@@ -303,8 +320,6 @@ namespace Inventory___Accounting_System.Migrations
                     b.HasIndex("ProductId");
 
                     b.HasIndex("StockId");
-
-                    b.HasIndex("StocksId");
 
                     b.ToTable("stockTransactions");
                 });
@@ -484,14 +499,10 @@ namespace Inventory___Accounting_System.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Models.Stocks", "Stock")
-                        .WithMany()
+                        .WithMany("stockTransactions")
                         .HasForeignKey("StockId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("Domain.Models.Stocks", null)
-                        .WithMany("stockTransactions")
-                        .HasForeignKey("StocksId");
 
                     b.Navigation("Stock");
 

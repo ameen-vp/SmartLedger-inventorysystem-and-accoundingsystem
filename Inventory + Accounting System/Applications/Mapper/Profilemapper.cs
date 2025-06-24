@@ -30,6 +30,8 @@ namespace Applications.Mapper
             CreateMap<SalesInvoicesDto, SalesInvoice>().ReverseMap();
             CreateMap<AddSalesItemDto, SalesItems>().ReverseMap();
             CreateMap<ADDSalesInvoice,SalesInvoice>().ReverseMap();
+            CreateMap<UpdateStatusDto, SalesInvoice>().ReverseMap();
+            CreateMap<AddaccountDto, Accounts>().ReverseMap();
         }
     }
 }

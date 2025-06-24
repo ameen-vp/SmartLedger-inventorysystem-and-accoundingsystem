@@ -49,5 +49,11 @@ namespace Infrastructure.Repository
             await _appDbContext.PurchaseInvoices.Include(x => x.purchaseItems).
                    FirstOrDefaultAsync(x => x.Id == id);
         }
+        public async Task UpdateInvoice(PurchaseInvoice invoice)
+        {
+            _appDbContext.PurchaseInvoices.Update(invoice);
+            await _appDbContext.SaveChangesAsync();
+        }
+
     }
 }

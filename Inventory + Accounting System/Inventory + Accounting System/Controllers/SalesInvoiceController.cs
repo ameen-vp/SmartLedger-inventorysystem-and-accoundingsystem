@@ -1,4 +1,5 @@
-﻿using Applications.Dto;
+﻿using Application.Services;
+using Applications.Dto;
 using Applications.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,15 +11,17 @@ namespace Inventory___Accounting_System.Controllers
     public class SalesInvoiceController : ControllerBase
     {
         private readonly ISalesInvoiceService _salesInvoiceService;
-        public SalesInvoiceController(ISalesInvoiceService salesInvoiceService)
+        private readonly IIInvoicePdfGenerator _invoicePdfGenerator;
+        public SalesInvoiceController(ISalesInvoiceService salesInvoiceService, IIInvoicePdfGenerator iInvoicePdfGenerator)
         {
             _salesInvoiceService = salesInvoiceService;
+            _invoicePdfGenerator = iInvoicePdfGenerator;
         }
         [HttpPost("Sales-invoice")]
-        public async Task<IActionResult> SalesInvoice([FromBody]ADDSalesInvoice salesInvoice)
+        public async Task<IActionResult> SalesInvoice([FromBody] ADDSalesInvoice salesInvoice)
         {
             var res = await _salesInvoiceService.AddInvoice(salesInvoice);
-           return Ok(res);
+            return Ok(res);
         }
         [HttpGet("Get-Invoices")]
         public async Task<IActionResult> Get()
@@ -26,5 +29,30 @@ namespace Inventory___Accounting_System.Controllers
             var res = await _salesInvoiceService.Get();
             return Ok(res);
         }
+        [HttpPatch("Update-Status")]
+
+        public async Task<IActionResult> Update([FromForm] UpdateStatusDto dto)
+        {
+            var res = await _salesInvoiceService.UpdateSataus(dto);
+            return Ok(res);
+        }
+
+        [HttpGet("GetInvoicePdf/{id}")]
+        public async Task<IActionResult> GetInvoicePdf(int id)
+        {
+            var pdfBytes = await _salesInvoiceService.GenerateInvoicePdfAsync(id); // ✅ uses properly loaded invoice
+
+            if (pdfBytes == null)
+                return NotFound("Invoice not found or missing data.");
+
+            return File(pdfBytes, "application/pdf", $"Invoice_{id}.pdf");
+        }
+        [HttpGet("GetInvoiceById")]
+        public async Task<IActionResult> GetInvoiceById(int id)
+        {
+            var res = await _salesInvoiceService.GetInvoiceById(id);
+            return Ok(res);
+        }
+
     }
 }

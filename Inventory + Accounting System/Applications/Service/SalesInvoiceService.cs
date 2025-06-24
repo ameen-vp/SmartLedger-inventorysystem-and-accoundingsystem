@@ -18,14 +18,16 @@ namespace Applications.Service
         private readonly IStockRepo _stockRepo;
         private readonly ICostmerRepo _costmerRepo;
         private readonly IStockTransactionsRepo _stockTransactionsRepo;
+        private readonly IIInvoicePdfGenerator _iInvoicePdfGenerator;
 
-        public SalesInvoiceService(ISalesInvoiceRepo salesInvoiceRepo,IProductRepo productRepo, IStockRepo stockRepo, ICostmerRepo costmerRepo, IStockTransactionsRepo stockTransactionsRepo)
+        public SalesInvoiceService(ISalesInvoiceRepo salesInvoiceRepo,IProductRepo productRepo, IStockRepo stockRepo, ICostmerRepo costmerRepo, IStockTransactionsRepo stockTransactionsRepo,IIInvoicePdfGenerator iInvoicePdfGenerator)
         {
             _salesInvoiceRepo = salesInvoiceRepo;
             _productRepo = productRepo;
             _stockRepo = stockRepo;
             _costmerRepo = costmerRepo;
             _stockTransactionsRepo = stockTransactionsRepo;
+            _iInvoicePdfGenerator = iInvoicePdfGenerator;
         }
         public async Task<Apiresponse<ADDSalesInvoice>> AddInvoice(ADDSalesInvoice salesInvoice)
         {
@@ -102,11 +104,16 @@ namespace Applications.Service
 
 
                     var subtotal = quantity * unitprice;
-                    var discountamount = dis;
+                    var discountamount = dis > subtotal ? subtotal : dis;
+               
                     var afterdiscount = subtotal - discountamount;
                     var taxableamount = afterdiscount;
                     var gstamount = (taxableamount * gst) / 100m;
                     var total = gstamount + taxableamount;
+
+                    gstamount = Math.Abs(Math.Round(gstamount, 2));
+                    total = Math.Abs(Math.Round(total, 2));
+
 
                     invoice.SalesItems.Add(new SalesItems
                     {
@@ -191,7 +198,7 @@ namespace Applications.Service
         public async Task<Apiresponse<string>> UpdateSataus(UpdateStatusDto dto)
         {
             var check = await _salesInvoiceRepo.GetInvoiceId(dto.InvoiceId);
-            if(check == null)
+            if (check == null)
             {
                 return new Apiresponse<string>
                 {
@@ -201,8 +208,54 @@ namespace Applications.Service
                     Success = false,
                     Data = null
                 };
+
             }
-            if(dto.InvoiceStatus == Domain.Enum.InvoiceStatus.PENDING 
+            check.Status = dto.InvoiceStatus;
+            await _salesInvoiceRepo.Updatestatus(check);
+            return new Apiresponse<string>
+            {
+                Message = "Invoice Status Updated Successfully",
+                Statuscode = 200,
+                Success = true,
+                Data = null
+            };
         }
+        public async Task<Apiresponse<SalesInvoice>> GetInvoiceById(int id)
+        {
+            try
+            {
+                var invoice = await _salesInvoiceRepo.GetInvoiceId(id);
+                if(invoice == null)
+                {
+                    return new Apiresponse<SalesInvoice>
+                    {
+                        Data = null
+                        ,
+                        Statuscode = 404,
+                        Message = "Invoice Id Not found"
+                    };
+
+                }
+                return new Apiresponse<SalesInvoice>
+                {
+                    Data = invoice,
+                    Statuscode = 200,
+                    Success = true
+                };
+
+            }catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<byte[]?> GenerateInvoicePdfAsync(int id)
+        {
+            var invoice = await _salesInvoiceRepo.GetInvoiceWithDetailsAsync(id);
+            if (invoice == null)
+                return null;
+
+            return _iInvoicePdfGenerator.GenerateInvoicePdf(invoice);
+        }
+
     }
 }

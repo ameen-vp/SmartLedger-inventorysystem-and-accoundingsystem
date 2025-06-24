@@ -83,9 +83,13 @@ namespace Infrastructure.Repository
             var pro = await _appDbContext.Products.Include(x => x.StockTransactions).ToListAsync();
             return pro;
         }
-       //public async Task<Product> GetProductnameandsku(string name ,string sku)
-       // {
-       //     return await _appDbContext.Products.FirstOrDefaultAsync(x => x.ProductName == name && x.SKU == sku);
-       // }
+      public async Task<decimal> FetchPurchasePrize(int ProductId)
+        {
+            var prize = await _appDbContext.PurchaseItems.Where(x => x.ProductId == ProductId)
+                                                         .OrderByDescending(x => x.PurchaseInvoice.Date)
+                                                         .Select(x => x.UnitPrice)
+                                                         .FirstOrDefaultAsync();
+            return prize;
+        }
     }
 }
