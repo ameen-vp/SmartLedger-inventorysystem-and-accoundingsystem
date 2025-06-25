@@ -1,6 +1,7 @@
 ﻿using Applications.Dto;
 using Applications.Interface;
 using AutoMapper;
+using Domain.Enum;
 using Domain.Models;
 using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
@@ -62,6 +63,10 @@ namespace Infrastructure.Repository
                 .Include(i => i.SalesItems)
                     .ThenInclude(si => si.Product)
                 .FirstOrDefaultAsync(i => i.Id == id);
+        }
+        public async Task<IEnumerable<SalesInvoice>> GetStatus(InvoiceStatus invoiceStatus)
+        {
+            return await _appDbContext.SalesInvoices.Where(x => x.Status == invoiceStatus).ToListAsync();
         }
     }
 }

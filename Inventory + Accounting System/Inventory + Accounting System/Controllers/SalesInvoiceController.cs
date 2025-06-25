@@ -1,6 +1,7 @@
 ﻿using Application.Services;
 using Applications.Dto;
 using Applications.Interface;
+using Domain.Enum;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,7 +41,7 @@ namespace Inventory___Accounting_System.Controllers
         [HttpGet("GetInvoicePdf/{id}")]
         public async Task<IActionResult> GetInvoicePdf(int id)
         {
-            var pdfBytes = await _salesInvoiceService.GenerateInvoicePdfAsync(id); // ✅ uses properly loaded invoice
+            var pdfBytes = await _salesInvoiceService.GenerateInvoicePdfAsync(id); 
 
             if (pdfBytes == null)
                 return NotFound("Invoice not found or missing data.");
@@ -53,6 +54,12 @@ namespace Inventory___Accounting_System.Controllers
             var res = await _salesInvoiceService.GetInvoiceById(id);
             return Ok(res);
         }
+        [HttpGet("GetStatus")]
 
+        public async Task<IActionResult> Get(InvoiceStatus invoiceStatus)
+        {
+            var res = await _salesInvoiceService.Getstatus(invoiceStatus);
+            return Ok(res);
+        }
     }
 }

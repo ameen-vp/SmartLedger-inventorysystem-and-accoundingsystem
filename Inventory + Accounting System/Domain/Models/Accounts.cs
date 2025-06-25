@@ -16,6 +16,8 @@ namespace Domain.Models
         public string Name { get; set; }
 
         public AccountType Type { get; set; }
+
+        public decimal Balance { get; set; }
     }
     public class JournalEntry
     {
@@ -44,7 +46,7 @@ namespace Domain.Models
     public class LedgerEntry
     {
         public int Id { get; set; }
-        public DateTime EntryDate { get; set; }
+        public DateTime EntryDate { get; set; } = DateTime.Now;
         public string Description { get; set; }
 
         public int DebitAccountId { get; set; }

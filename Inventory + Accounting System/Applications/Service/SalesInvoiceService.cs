@@ -1,6 +1,8 @@
 ﻿using Applications.ApiResponse;
 using Applications.Dto;
 using Applications.Interface;
+using Azure;
+using Domain.Enum;
 using Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -256,6 +258,38 @@ namespace Applications.Service
 
             return _iInvoicePdfGenerator.GenerateInvoicePdf(invoice);
         }
-
+        public async Task<Apiresponse<IEnumerable< SalesInvoice>>> Getstatus(InvoiceStatus invoiceStatus)
+        {
+            try
+            {
+                var statos = await _salesInvoiceRepo.GetStatus(invoiceStatus);
+                if(statos == null || statos.Count() == 0)
+                {
+                    return new Apiresponse<IEnumerable<SalesInvoice>>
+                    {
+                        Message = "Status not found",
+                        Statuscode = 404,
+                        Success = false,
+                        Data = null
+                    };
+                }return new Apiresponse<IEnumerable<SalesInvoice>>
+                {
+                    Data = statos,
+                    Statuscode = 200,
+                    Success = true
+                    ,
+                    Message = "Status Fetched Sucsessfully"
+                };
+            }catch(Exception ex)
+            {
+                return new Apiresponse<IEnumerable<SalesInvoice>>
+                {
+                    Message = ex.Message,
+                    Statuscode = 500,
+                    Success = false,
+                    Data = null
+                };
+            }
+        }
     }
 }

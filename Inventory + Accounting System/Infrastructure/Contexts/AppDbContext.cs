@@ -136,7 +136,13 @@ namespace Infrastructure.Contexts
             modelBuilder.Entity<Product>()
                 .Property(x => x.PurchaseGST)
                 .HasPrecision(18, 2);
-            
+            modelBuilder.Entity<Accounts>()
+                .Property(z => z.Balance)
+                .HasPrecision(18, 2);
+            modelBuilder.Entity<LedgerEntry>()
+                .Property(z => z.Amount)
+                .HasPrecision(18, 2);
+
 
 
 

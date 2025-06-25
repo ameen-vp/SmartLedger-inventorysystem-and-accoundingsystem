@@ -1,5 +1,6 @@
 ﻿using Applications.ApiResponse;
 using Applications.Dto;
+using Domain.Enum;
 using Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,8 @@ namespace Applications.Interface
 
         Task<SalesInvoice?> GetInvoiceWithDetailsAsync(int id);
 
+        Task<IEnumerable<SalesInvoice>> GetStatus(InvoiceStatus invoiceStatus);
+
 
 
     }
@@ -40,5 +43,7 @@ namespace Applications.Interface
         Task<Apiresponse<SalesInvoice>> GetInvoiceById(int id);
 
         Task<byte[]?> GenerateInvoicePdfAsync(int id);
+
+        Task<Apiresponse<IEnumerable<SalesInvoice>>> Getstatus(InvoiceStatus invoiceStatus);
     }
 }
