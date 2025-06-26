@@ -12,12 +12,16 @@ namespace Applications.Interface
 {
    public interface IAccountRepo
     {
-        Task Addacoount(Accounts accounts);
+        Task<Accounts> Addacoount(Accounts accounts);
         Task<List< Accounts>> Get();
 
         IEnumerable<Accounts> GetTypes(AccountType type);
 
         Task<bool> Delete(int id);
+
+        Task<int> GetcustomerId(int id);
+
+        Task<int> GetAccountsId( );
 
     }
     public interface IAccountService

@@ -21,6 +21,8 @@ namespace Domain.Models
 
         public ICollection<LedgerEntry> DebitEntrys { get; set; }
         public ICollection<LedgerEntry> CreditEntrys { get; set; }
+
+        public ICollection<Costomer> costomers { get; set; }
     }
     public class JournalEntry
     {
@@ -50,6 +52,10 @@ namespace Domain.Models
     {
         public int Id { get; set; }
         public DateTime EntryDate { get; set; } = DateTime.Now;
+
+        public int? SalesInvoiceId { get; set; }
+
+        public SalesInvoice SalesInvoice { get; set; }
         public string Description { get; set; }
 
         public int DebitAccountId { get; set; }

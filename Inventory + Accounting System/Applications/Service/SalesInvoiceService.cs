@@ -21,8 +21,11 @@ namespace Applications.Service
         private readonly ICostmerRepo _costmerRepo;
         private readonly IStockTransactionsRepo _stockTransactionsRepo;
         private readonly IIInvoicePdfGenerator _iInvoicePdfGenerator;
+        private readonly IAccountRepo _accountrepo;
+        private readonly ILedgerRepo _ledgereppo;
 
-        public SalesInvoiceService(ISalesInvoiceRepo salesInvoiceRepo,IProductRepo productRepo, IStockRepo stockRepo, ICostmerRepo costmerRepo, IStockTransactionsRepo stockTransactionsRepo,IIInvoicePdfGenerator iInvoicePdfGenerator)
+        public SalesInvoiceService(ISalesInvoiceRepo salesInvoiceRepo,IProductRepo productRepo, IStockRepo stockRepo, ICostmerRepo costmerRepo,
+            IStockTransactionsRepo stockTransactionsRepo,IIInvoicePdfGenerator iInvoicePdfGenerator,IAccountRepo accountRepo,ILedgerRepo ledgerRepo)
         {
             _salesInvoiceRepo = salesInvoiceRepo;
             _productRepo = productRepo;
@@ -30,6 +33,8 @@ namespace Applications.Service
             _costmerRepo = costmerRepo;
             _stockTransactionsRepo = stockTransactionsRepo;
             _iInvoicePdfGenerator = iInvoicePdfGenerator;
+            _accountrepo = accountRepo;
+            _ledgereppo = ledgerRepo;
         }
         public async Task<Apiresponse<ADDSalesInvoice>> AddInvoice(ADDSalesInvoice salesInvoice)
         {
@@ -131,6 +136,21 @@ namespace Applications.Service
                 invoice.TotalAmount = invoiceamount;
 
                 await _salesInvoiceRepo.AddSalesInvoice(invoice);
+
+            int customer = await _accountrepo.GetcustomerId(invoice.CustomerId);
+           int  accounts = await _accountrepo.GetAccountsId();
+
+                var ledger = new LedgerEntry
+                {
+                    EntryDate = DateTime.Now,
+                    Description = $"Sales Invoice {invoice.InvoiceNumber}",
+                  DebitAccountId= customer,
+                    CreditAccountId= accounts,
+                    Amount = invoice.TotalAmount,
+                    SalesInvoiceId = invoice.Id
+                };
+                await _ledgereppo.AddEntry(ledger);
+
                 return new Apiresponse<ADDSalesInvoice>
                 {
                     Data = salesInvoice,

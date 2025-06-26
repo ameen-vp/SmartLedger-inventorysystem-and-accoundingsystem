@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,6 +17,10 @@ namespace Domain.Models
         [Required(ErrorMessage = "Phone number is required")]
         [MaxLength(10)]
         public string Phone { get; set; }
+
+
+        public int? AccountId { get; set; } 
+        public Accounts Account { get; set; }
 
         public ICollection<SalesInvoice> SalesInvoices { get; set; }
     }

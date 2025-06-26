@@ -15,11 +15,13 @@ namespace Applications.Service
     {
         private readonly ICostmerRepo _costmerRepo;
         private readonly IMapper _mapper;
+        private readonly IAccountRepo _accountrepo;
 
-        public CostomerService(ICostmerRepo costmerRepo , IMapper mapper)
+        public CostomerService(ICostmerRepo costmerRepo , IMapper mapper, IAccountRepo accountrepo)
         {
             _costmerRepo = costmerRepo;
             _mapper = mapper;
+            _accountrepo = accountrepo;
         }
         public async Task<Apiresponse<string>> AddCostomer(CostomerDto costomerDto)
         {
@@ -29,11 +31,40 @@ namespace Applications.Service
             var res = await _costmerRepo.AddCostomers(model);
             if (res)
             {
+                var account = new Accounts
+                {
+                    Name = model.Name,
+                    Type = Domain.Enum.AccountType.ASSET,
+                    Balance = 0
+                };
+
+                var createdAccount = await _accountrepo.Addacoount(account);
+
+                if (createdAccount == null || createdAccount.Id == 0)
+                {
+                    return new Apiresponse<string>
+                    {
+                        Success = false,
+                        Statuscode = 500,
+                        Message = "Account creation failed"
+                    };
+                }
+
+                model.AccountId = createdAccount.Id;
+                 var update =  await _costmerRepo.Update(model);
+                if (!update)
+                {
+                    return new Apiresponse<string>
+                    {
+                        Success = false,
+                        Statuscode = 500,
+                        Message = "Failed to update customer with account link"
+                    };
+                }
                 return new Apiresponse<string>
                 {
                     Success = true,
-                    Message = "Costomer Added Successfully"
-              
+                    Message = "Costomer Added Successfully with Account"
                 };
             }
             else

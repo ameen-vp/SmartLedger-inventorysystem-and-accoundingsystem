@@ -16,6 +16,8 @@ namespace Applications.Interface
 
         Task<bool> DeleteCostomers(int id);
 
+        Task<bool> Update(Costomer costomer);
+
 
     }
     

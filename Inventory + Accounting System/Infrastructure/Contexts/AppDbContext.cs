@@ -154,6 +154,17 @@ namespace Infrastructure.Contexts
                 .WithMany(x => x.CreditEntrys)
                 .HasForeignKey(x => x.CreditAccountId)
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<LedgerEntry>()
+                .HasOne(x => x.SalesInvoice)
+                .WithMany(x => x.LedgerEntries)
+                .HasForeignKey(x => x.SalesInvoiceId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Costomer>()
+                .HasOne(x => x.Account)
+                .WithMany(x => x.costomers)
+                .HasForeignKey(c => c.AccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+
 
 
 

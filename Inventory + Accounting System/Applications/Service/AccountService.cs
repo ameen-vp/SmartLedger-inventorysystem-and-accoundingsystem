@@ -26,6 +26,7 @@ namespace Applications.Service
                     Name = addaccountDto.Name,
                     Type = addaccountDto.Type,
                     Balance = addaccountDto.Balance
+                    
                 };
                 await _accountRepo.Addacoount(account);
                 return new Apiresponse<string>

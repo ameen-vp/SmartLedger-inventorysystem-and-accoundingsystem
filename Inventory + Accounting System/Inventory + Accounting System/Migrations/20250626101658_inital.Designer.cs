@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Inventory___Accounting_System.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250625052637_ledgers")]
-    partial class ledgers
+    [Migration("20250626101658_inital")]
+    partial class inital
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -74,6 +74,9 @@ namespace Inventory___Accounting_System.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CostomerId"));
 
+                    b.Property<int?>("AccountId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -84,6 +87,8 @@ namespace Inventory___Accounting_System.Migrations
                         .HasColumnType("nvarchar(10)");
 
                     b.HasKey("CostomerId");
+
+                    b.HasIndex("AccountId");
 
                     b.ToTable("Costomer");
                 });
@@ -113,11 +118,16 @@ namespace Inventory___Accounting_System.Migrations
                     b.Property<DateTime>("EntryDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("SalesInvoiceId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CreditAccountId");
 
                     b.HasIndex("DebitAccountId");
+
+                    b.HasIndex("SalesInvoiceId");
 
                     b.ToTable("LedgerEntries");
                 });
@@ -456,6 +466,16 @@ namespace Inventory___Accounting_System.Migrations
                     b.ToTable("Vendors");
                 });
 
+            modelBuilder.Entity("Domain.Models.Costomer", b =>
+                {
+                    b.HasOne("Domain.Models.Accounts", "Account")
+                        .WithMany("costomers")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Account");
+                });
+
             modelBuilder.Entity("Domain.Models.LedgerEntry", b =>
                 {
                     b.HasOne("Domain.Models.Accounts", "CreditAccount")
@@ -470,9 +490,16 @@ namespace Inventory___Accounting_System.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Domain.Models.SalesInvoice", "SalesInvoice")
+                        .WithMany("LedgerEntries")
+                        .HasForeignKey("SalesInvoiceId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("CreditAccount");
 
                     b.Navigation("DebitAccount");
+
+                    b.Navigation("SalesInvoice");
                 });
 
             modelBuilder.Entity("Domain.Models.Product", b =>
@@ -585,6 +612,8 @@ namespace Inventory___Accounting_System.Migrations
                     b.Navigation("CreditEntrys");
 
                     b.Navigation("DebitEntrys");
+
+                    b.Navigation("costomers");
                 });
 
             modelBuilder.Entity("Domain.Models.Category", b =>
@@ -616,6 +645,8 @@ namespace Inventory___Accounting_System.Migrations
 
             modelBuilder.Entity("Domain.Models.SalesInvoice", b =>
                 {
+                    b.Navigation("LedgerEntries");
+
                     b.Navigation("SalesItems");
                 });
 

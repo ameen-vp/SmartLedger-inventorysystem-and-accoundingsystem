@@ -23,6 +23,7 @@ namespace Domain.Models
 
        
         public ICollection<SalesItems> SalesItems { get; set; }
+        public ICollection<LedgerEntry> LedgerEntries { get; set; } 
     }
 
     public class SalesItems

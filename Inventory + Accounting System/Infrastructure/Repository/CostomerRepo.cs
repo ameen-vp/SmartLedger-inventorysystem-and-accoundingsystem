@@ -51,5 +51,17 @@ namespace Infrastructure.Repository
                 throw new Exception(ex.Message);
             }
         }
+        public async Task<bool> Update(Costomer costomer)
+        {
+            var existingCustomer = await _appDbContext.Costomer.FirstOrDefaultAsync(c => c.CostomerId == costomer.CostomerId);
+            if (existingCustomer == null)
+                return false;
+
+            existingCustomer.AccountId = costomer.AccountId;
+            
+
+            await _appDbContext.SaveChangesAsync();
+            return true;
+        }
     }
 }

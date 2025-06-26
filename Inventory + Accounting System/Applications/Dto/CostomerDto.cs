@@ -15,5 +15,7 @@ namespace Applications.Dto
         [Required(ErrorMessage = "Phone number is required")]
         [MaxLength(10)]
         public string Phone { get; set; }
+
+        public int? AccountId { get; set; }
     }
 }
