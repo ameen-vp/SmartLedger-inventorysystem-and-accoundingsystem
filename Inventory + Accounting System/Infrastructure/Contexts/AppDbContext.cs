@@ -37,6 +37,8 @@ namespace Infrastructure.Contexts
 
         public DbSet<Accounts> Accounts { get; set; }
 
+        public DbSet<LedgerEntry> LedgerEntries { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -142,6 +144,16 @@ namespace Infrastructure.Contexts
             modelBuilder.Entity<LedgerEntry>()
                 .Property(z => z.Amount)
                 .HasPrecision(18, 2);
+            modelBuilder.Entity<LedgerEntry>()
+                .HasOne(x => x.DebitAccount)
+                .WithMany(x => x.DebitEntrys)
+                .HasForeignKey(x => x.DebitAccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<LedgerEntry>()
+                .HasOne(x => x.CreditAccount)
+                .WithMany(x => x.CreditEntrys)
+                .HasForeignKey(x => x.CreditAccountId)
+                .OnDelete(DeleteBehavior.Restrict);
 
 
 

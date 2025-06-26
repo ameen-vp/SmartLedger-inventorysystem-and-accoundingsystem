@@ -18,6 +18,9 @@ namespace Domain.Models
         public AccountType Type { get; set; }
 
         public decimal Balance { get; set; }
+
+        public ICollection<LedgerEntry> DebitEntrys { get; set; }
+        public ICollection<LedgerEntry> CreditEntrys { get; set; }
     }
     public class JournalEntry
     {
@@ -50,12 +53,12 @@ namespace Domain.Models
         public string Description { get; set; }
 
         public int DebitAccountId { get; set; }
-        [ForeignKey("DebitAccountId")]
+   
         public Accounts DebitAccount { get; set; }
 
         
         public int CreditAccountId { get; set; }
-        [ForeignKey("CreditAccountId")]
+      
         public Accounts CreditAccount { get; set; }
 
         public decimal Amount { get; set; }

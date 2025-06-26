@@ -54,6 +54,8 @@ builder.Services.AddScoped<ISalesInvoiceService, SalesInvoiceService>();
 builder.Services.AddScoped<IIInvoicePdfGenerator, InvoicePdfGenerator>();
 builder.Services.AddScoped<IAccountRepo, AccountRepo>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<ILedgerRepo, LedgerREpo>();
+builder.Services.AddScoped<ILedgerSErvice, LedgerSErvice>();
 
 
 
