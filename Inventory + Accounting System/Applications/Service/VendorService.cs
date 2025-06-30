@@ -25,7 +25,7 @@ namespace Applications.Service
             try
             {   
                 var dto = _mapper.Map<Vendor>(vendorAdddto);
-                var exit = await _vendorRepo.Vendorexits(dto.VendorId);
+                var exit = await _vendorRepo.Vendorexits(dto.VendorName);
                 if (exit)
                 {
                     return new Apiresponse<Vendor>

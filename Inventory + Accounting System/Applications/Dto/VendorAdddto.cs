@@ -18,9 +18,12 @@ namespace Applications.Dto
 
         public string ? place { get; set; }
 
+        public int? AccountId { get; set; }
+
     }
     public class vendeorviewDto
     {
+        public int VendorId { get; set; }
         public string VendorName { get; set; }
 
         public string Phone { get; set; }

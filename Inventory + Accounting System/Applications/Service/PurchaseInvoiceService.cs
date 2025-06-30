@@ -18,13 +18,21 @@ namespace Applications.Service
         private readonly IStockRepo _stockRepo;
         private readonly IStockTransactionsRepo _stockTransactionsRepo;
         private readonly IStockTransactionServices _stockTransactionServices;
-        public PurchaseInvoiceService(IpurchaseInvoiceRepo ipurchaseInvoiceRepo, IProductRepo productRepo, IStockRepo stockRepo, IStockTransactionsRepo stockTransactionsRepo, IStockTransactionServices stockTransactionServices)
+        private readonly IAccountRepo _accountsrepo;
+        private readonly ILedgerRepo _ledgerrepo;
+        private readonly IJournalEntrysRepo _journalrepo;
+        public PurchaseInvoiceService(IpurchaseInvoiceRepo ipurchaseInvoiceRepo, IProductRepo productRepo, 
+            IStockRepo stockRepo, IStockTransactionsRepo stockTransactionsRepo,
+            IStockTransactionServices stockTransactionServices, IAccountRepo accountsrepo, ILedgerRepo ledgerrepo, IJournalEntrysRepo journalrepo)
         {
             _ipurchaseInvoiceRepo = ipurchaseInvoiceRepo;
             _productRepo = productRepo;
             _stockRepo = stockRepo;
             _stockTransactionsRepo = stockTransactionsRepo;
             _stockTransactionServices = stockTransactionServices;
+            _accountsrepo = accountsrepo;
+            _ledgerrepo = ledgerrepo;
+            _journalrepo = journalrepo;
         }
         public async Task<Apiresponse<string>> AddInvoices(AddPurchaseinvoiceDto addPurchaseinvoiceDto)
         {
@@ -117,8 +125,52 @@ namespace Applications.Service
                 purchaseinfo.GrantToTal = withgst;
                 purchaseinfo.GST = withgst - withoutgst;
 
-                await _ipurchaseInvoiceRepo.AddInvoice(purchaseinfo);
+              var savedinvoice=  await _ipurchaseInvoiceRepo.AddInvoice(purchaseinfo);
+
+                int vendorid = await _accountsrepo.GetVenderId(purchaseinfo.VentorsId);
+                int purchaseaccounts = await _accountsrepo.GetAccountsIdByPurchase();
+
+                var ledger = new LedgerEntry
+                {
+                    EntryDate = DateOnly.FromDateTime(addPurchaseinvoiceDto.InvoiceDate),
+                    Description = $"Purchase Invoice {purchaseinfo.InvoiceNumber}",
+                    DebitAccountId = purchaseaccounts,
+                    CreditAccountId = vendorid,
+                    Amount = savedinvoice.GrantToTal,
+                    PurchaseInvoiceId = savedinvoice.Id
+
+
+                };
+                await _ledgerrepo.AddEntry(ledger);
+               
+                var je = new JournalEntry
+                {
+                    Date = DateOnly.FromDateTime(savedinvoice.Date).ToDateTime(TimeOnly.MinValue),
+                    Narration = $"Purchase Invoice {savedinvoice.InvoiceNumber}"
+                };
+                var savedJE = await _journalrepo.AddJournalEntrys(je);
+    
+            
+                var lines = new List<JournalLine>
+{
+                   new JournalLine
+                   {
+                        JournalEntryId = savedJE.Id,
+                        AccountId      = purchaseaccounts,
+                        Debit          = savedinvoice.GrantToTal,
+                        Credit         = 0m
+                     },
+    new JournalLine
+    {
+        JournalEntryId = savedJE.Id,
+        AccountId      = vendorid,
+        Debit          = 0m,
+        Credit         = savedinvoice.GrantToTal
+    }
+};
+
               
+                await _journalrepo.AddJournalLines(lines);
 
                 return new Apiresponse<string>
                 {

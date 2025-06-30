@@ -23,6 +23,11 @@ namespace Applications.Interface
 
         Task<int> GetAccountsId( );
 
+        Task<int> GetAccountsIdByPurchase();
+        Task<int> GetVenderId(int id);
+
+        Task<List<Accounts>> GetAccountsByIdsAsync(List<int> accoumids);
+
     }
     public interface IAccountService
     {

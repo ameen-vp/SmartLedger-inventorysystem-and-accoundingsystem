@@ -29,5 +29,12 @@ namespace Inventory___Accounting_System.Controllers
             var res = await _service.Delete(id);
             return Ok(res);
         }
+        [HttpGet ("Get-Ledgers")]
+
+        public async Task<IActionResult> Get()
+        {
+            var res = await _service.Get();
+            return Ok(res);
+        }
     }
 }

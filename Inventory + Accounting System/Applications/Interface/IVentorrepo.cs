@@ -11,7 +11,7 @@ namespace Applications.Interface
     {
         Task  Addvendor(Vendor vendor);
 
-        Task<bool> Vendorexits(int id);
+        Task<bool> Vendorexits(string name);
 
         Task<List<Vendor>> Getventors();
 

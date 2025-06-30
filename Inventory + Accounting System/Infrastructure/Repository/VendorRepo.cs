@@ -23,9 +23,9 @@ namespace Infrastructure.Repository
             await _context.Vendors.AddAsync(vendor);
             await _context.SaveChangesAsync();
         }
-        public async Task<bool> Vendorexits(int id)
+        public async Task<bool> Vendorexits(string name)
         {
-            return await _context.Vendors.AnyAsync(x => x.VendorId == id);
+            return await _context.Vendors.AnyAsync(x => x.VendorName == name);
 
         }
         public async Task<List<Vendor>> Getventors()

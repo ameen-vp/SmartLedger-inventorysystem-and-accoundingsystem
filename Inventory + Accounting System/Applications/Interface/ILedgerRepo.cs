@@ -18,11 +18,15 @@ namespace Applications.Interface
         Task Update(Accounts accounts);
 
         Task<bool> Delete(int id);
+
+        Task<List<LedgerEntry>> GetLedger();
     }
     public interface ILedgerSErvice
     {
         Task<Apiresponse<AddLedgerDto>> AddEntry(AddLedgerDto addLedgerDto);
 
         Task<Apiresponse<string>> Delete(int id);
+
+        Task<Apiresponse<List<LedgerEntry>>> Get();
     }
 }

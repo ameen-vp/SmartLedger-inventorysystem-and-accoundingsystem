@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,7 +20,12 @@ namespace Domain.Models
 
         public string ? place { get; set; }
 
+        public int? AccountId { get; set; }
+        public Accounts Account { get; set; }
+
         public ICollection<PurchaseInvoice> PurchaseInvoices { get; set; }
+
+
 
     }
 }

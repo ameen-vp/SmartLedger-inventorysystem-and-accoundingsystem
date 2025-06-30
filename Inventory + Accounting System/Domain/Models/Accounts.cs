@@ -23,11 +23,13 @@ namespace Domain.Models
         public ICollection<LedgerEntry> CreditEntrys { get; set; }
 
         public ICollection<Costomer> costomers { get; set; }
+
+        public ICollection<Vendor> vendors { get;set; }
     }
     public class JournalEntry
     {
         public int Id { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } 
         public string Narration { get; set; }
 
         public ICollection<JournalLine> journalLines { get; set; }
@@ -51,23 +53,26 @@ namespace Domain.Models
     public class LedgerEntry
     {
         public int Id { get; set; }
-        public DateTime EntryDate { get; set; } = DateTime.Now;
+        public DateOnly EntryDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 
         public int? SalesInvoiceId { get; set; }
 
         public SalesInvoice SalesInvoice { get; set; }
         public string Description { get; set; }
 
-        public int DebitAccountId { get; set; }
+        public int?DebitAccountId { get; set; }
    
         public Accounts DebitAccount { get; set; }
 
         
-        public int CreditAccountId { get; set; }
+        public int?CreditAccountId { get; set; }
       
         public Accounts CreditAccount { get; set; }
 
         public decimal Amount { get; set; }
+
+        public int? PurchaseInvoiceId { get; set; }
+        public PurchaseInvoice PurchaseInvoice { get; set; }
     }
 
 }

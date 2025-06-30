@@ -39,6 +39,11 @@ namespace Infrastructure.Contexts
 
         public DbSet<LedgerEntry> LedgerEntries { get; set; }
 
+        public DbSet<JournalLine> JournalLines { get; set; }
+        public DbSet<JournalEntry> journalEntries { get; set; }
+
+        public DbSet<ProfitandLoss> ProfitandLosses { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -163,9 +168,40 @@ namespace Infrastructure.Contexts
                 .HasOne(x => x.Account)
                 .WithMany(x => x.costomers)
                 .HasForeignKey(c => c.AccountId)
+                .OnDelete(DeleteBehavior.Restrict);  
+            modelBuilder.Entity<LedgerEntry>()
+                .HasOne(x => x.PurchaseInvoice)
+                .WithOne(x => x.LedgerEntry)
+                .HasForeignKey<LedgerEntry>(z => z.PurchaseInvoiceId);
+            modelBuilder.Entity<Vendor>()
+                .HasOne(x => x.Account)
+                .WithMany(x => x.vendors)
+                .HasForeignKey(x => x.AccountId)
                 .OnDelete(DeleteBehavior.Restrict);
-
-
+            //modelBuilder.Entity<LedgerEntry>()
+            //    .Property(x => x.CreditAccount)
+            //    .HasConversion<string>();
+            //modelBuilder.Entity<LedgerEntry>()
+            //    .Property(x => x.DebitAccount)
+            //    .HasConversion<string>();
+            modelBuilder.Entity<JournalLine>()
+                .Property(x => x.Debit)
+                 .HasPrecision(18, 2);
+            modelBuilder.Entity<JournalLine>()
+                .Property(x => x.Credit)
+                .HasPrecision(18, 2);
+            modelBuilder.Entity<ProfitandLoss>()
+                .Property(x => x.NetProfit).HasPrecision(18, 2);
+            modelBuilder.Entity<ProfitandLoss>()
+             .Property(x => x.GrossProfit).HasPrecision(18, 2); 
+            modelBuilder.Entity<ProfitandLoss>()
+                .Property(x => x.TotalSales).HasPrecision(18, 2);
+            modelBuilder.Entity<ProfitandLoss>()
+             .Property(x => x.TotalPurchases).HasPrecision(18, 2);
+            modelBuilder.Entity<ProfitandLoss>()
+             .Property(x => x.OtherExpenses).HasPrecision(18, 2);
+            modelBuilder.Entity<ProfitandLoss>()
+             .Property(x => x.OtherIncome).HasPrecision(18, 2);
 
 
 

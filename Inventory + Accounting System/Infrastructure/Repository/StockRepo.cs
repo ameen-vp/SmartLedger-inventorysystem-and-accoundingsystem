@@ -45,10 +45,11 @@ namespace Infrastructure.Repository
             return delete > 0;
 
         }
-        public async Task UpdateStock(Stocks stocks)
+        public async Task<Stocks> UpdateStock(Stocks stocks)
         {
             _appDbContext.Stocks.Update(stocks);
             await _appDbContext.SaveChangesAsync();
+            return stocks;
         }
        public async Task<Stocks> FindproductId(int productId)
         {

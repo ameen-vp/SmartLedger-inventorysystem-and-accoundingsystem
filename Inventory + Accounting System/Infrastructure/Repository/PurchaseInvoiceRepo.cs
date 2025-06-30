@@ -17,10 +17,11 @@ namespace Infrastructure.Repository
             {
             _appDbContext = appDbContext;
             }
-       public async Task AddInvoice(PurchaseInvoice purchaseInvoice)
+       public async Task<PurchaseInvoice> AddInvoice(PurchaseInvoice purchaseInvoice)
         {
             await _appDbContext.PurchaseInvoices.AddAsync(purchaseInvoice);
             await _appDbContext.SaveChangesAsync();
+            return purchaseInvoice;
         }
         public async Task<Vendor> GetvendorsId(int vendorId)
         {

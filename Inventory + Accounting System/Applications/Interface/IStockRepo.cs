@@ -21,7 +21,7 @@ namespace Applications.Interface
 
         Task<bool>  DeleteStock(int id);
 
-        Task UpdateStock(Stocks stocks);
+        Task<Stocks> UpdateStock(Stocks stocks);
 
         Task<Stocks> FindproductId(int productId);
 

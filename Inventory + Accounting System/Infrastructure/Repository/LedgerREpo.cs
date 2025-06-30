@@ -27,7 +27,7 @@ namespace Infrastructure.Repository
                 await _appDbContext.SaveChangesAsync();
             }catch(DbUpdateException ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception("Database update failed: " + ex.InnerException?.Message, ex);
             }
         }
         public async Task<Accounts> GetdebitId(int id)
@@ -80,6 +80,10 @@ namespace Infrastructure.Repository
             {
                 throw new Exception(ex.Message);
             }
+        }
+        public async Task<List<LedgerEntry>> GetLedger()
+        {
+            return await _appDbContext.LedgerEntries.ToListAsync();
         }
     }
 }

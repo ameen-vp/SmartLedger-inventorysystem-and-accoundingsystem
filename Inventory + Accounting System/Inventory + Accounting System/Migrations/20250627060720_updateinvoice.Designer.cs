@@ -4,6 +4,7 @@ using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Inventory___Accounting_System.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250627060720_updateinvoice")]
+    partial class updateinvoice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,57 +93,6 @@ namespace Inventory___Accounting_System.Migrations
                     b.ToTable("Costomer");
                 });
 
-            modelBuilder.Entity("Domain.Models.JournalEntry", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Narration")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("journalEntries");
-                });
-
-            modelBuilder.Entity("Domain.Models.JournalLine", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Credit")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Debit")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("JournalEntryId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
-
-                    b.HasIndex("JournalEntryId");
-
-                    b.ToTable("JournalLines");
-                });
-
             modelBuilder.Entity("Domain.Models.LedgerEntry", b =>
                 {
                     b.Property<int>("Id")
@@ -153,18 +105,18 @@ namespace Inventory___Accounting_System.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("CreditAccountId")
+                    b.Property<int>("CreditAccountId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("DebitAccountId")
+                    b.Property<int>("DebitAccountId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly>("EntryDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("EntryDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("PurchaseInvoiceId")
                         .HasColumnType("int");
@@ -233,52 +185,6 @@ namespace Inventory___Accounting_System.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("Domain.Models.ProfitandLoss", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateOnly>("EndDate")
-                        .HasColumnType("date");
-
-                    b.Property<decimal>("GrossProfit")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("NetProfit")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("OtherExpenses")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("OtherIncome")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateOnly>("StartDate")
-                        .HasColumnType("date");
-
-                    b.Property<decimal>("TotalPurchases")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalSales")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ProfitandLosses");
                 });
 
             modelBuilder.Entity("Domain.Models.PurchaseInvoice", b =>
@@ -582,36 +488,19 @@ namespace Inventory___Accounting_System.Migrations
                     b.Navigation("Account");
                 });
 
-            modelBuilder.Entity("Domain.Models.JournalLine", b =>
-                {
-                    b.HasOne("Domain.Models.Accounts", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Models.JournalEntry", "JournalEntry")
-                        .WithMany("journalLines")
-                        .HasForeignKey("JournalEntryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-
-                    b.Navigation("JournalEntry");
-                });
-
             modelBuilder.Entity("Domain.Models.LedgerEntry", b =>
                 {
                     b.HasOne("Domain.Models.Accounts", "CreditAccount")
                         .WithMany("CreditEntrys")
                         .HasForeignKey("CreditAccountId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Domain.Models.Accounts", "DebitAccount")
                         .WithMany("DebitEntrys")
                         .HasForeignKey("DebitAccountId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Domain.Models.PurchaseInvoice", "PurchaseInvoice")
                         .WithOne("LedgerEntry")
@@ -765,11 +654,6 @@ namespace Inventory___Accounting_System.Migrations
             modelBuilder.Entity("Domain.Models.Costomer", b =>
                 {
                     b.Navigation("SalesInvoices");
-                });
-
-            modelBuilder.Entity("Domain.Models.JournalEntry", b =>
-                {
-                    b.Navigation("journalLines");
                 });
 
             modelBuilder.Entity("Domain.Models.Product", b =>

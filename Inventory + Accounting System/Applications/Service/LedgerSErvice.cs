@@ -59,7 +59,7 @@ namespace Applications.Service
                     creditid.Balance -= addLedgerDto.Amount;
                 else creditid.Balance += addLedgerDto.Amount;
 
-                map.EntryDate = DateTime.Now;
+                map.EntryDate = DateOnly.FromDateTime(DateTime.Today);
                 await _ledgerRepo.AddEntry(map);
 
                 await _ledgerRepo.Update(debitid);
@@ -110,6 +110,32 @@ namespace Applications.Service
                 };
             }
             catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<Apiresponse<List<LedgerEntry>>> Get()
+        {
+            try
+            {
+                var led = await _ledgerRepo.GetLedger();
+                if(led == null || led.Count() == 0)
+                {
+                    return new Apiresponse<List<LedgerEntry>>
+                    {
+                        Message = "Ledgers not found",
+                        Statuscode = 404,
+                        Success = false,
+                    };
+                }
+                return new Apiresponse<List<LedgerEntry>>
+                {
+                    Data = led,
+                    Message = "Ledgers fetched Sucsessfully ",
+                    Statuscode = 200,
+                    Success = true
+                };
+            }catch(Exception ex)
             {
                 throw new Exception(ex.Message);
             }

@@ -23,9 +23,11 @@ namespace Applications.Service
         private readonly IIInvoicePdfGenerator _iInvoicePdfGenerator;
         private readonly IAccountRepo _accountrepo;
         private readonly ILedgerRepo _ledgereppo;
+        private readonly IJournalEntrysRepo _journalrepo;
 
         public SalesInvoiceService(ISalesInvoiceRepo salesInvoiceRepo,IProductRepo productRepo, IStockRepo stockRepo, ICostmerRepo costmerRepo,
-            IStockTransactionsRepo stockTransactionsRepo,IIInvoicePdfGenerator iInvoicePdfGenerator,IAccountRepo accountRepo,ILedgerRepo ledgerRepo)
+            IStockTransactionsRepo stockTransactionsRepo,IIInvoicePdfGenerator iInvoicePdfGenerator,IAccountRepo accountRepo,ILedgerRepo ledgerRepo,
+            IJournalEntrysRepo journalEntrysRepo)
         {
             _salesInvoiceRepo = salesInvoiceRepo;
             _productRepo = productRepo;
@@ -35,6 +37,7 @@ namespace Applications.Service
             _iInvoicePdfGenerator = iInvoicePdfGenerator;
             _accountrepo = accountRepo;
             _ledgereppo = ledgerRepo;
+            _journalrepo = journalEntrysRepo;
         }
         public async Task<Apiresponse<ADDSalesInvoice>> AddInvoice(ADDSalesInvoice salesInvoice)
         {
@@ -142,7 +145,7 @@ namespace Applications.Service
 
                 var ledger = new LedgerEntry
                 {
-                    EntryDate = DateTime.Now,
+                    EntryDate = DateOnly.FromDateTime(DateTime.Now),
                     Description = $"Sales Invoice {invoice.InvoiceNumber}",
                   DebitAccountId= customer,
                     CreditAccountId= accounts,
@@ -150,6 +153,36 @@ namespace Applications.Service
                     SalesInvoiceId = invoice.Id
                 };
                 await _ledgereppo.AddEntry(ledger);
+
+                var journalEntry = new JournalEntry
+                {
+                    Date = invoice.InvoiceDate,
+                    Narration = $"Sales Invoice {invoice.InvoiceNumber}"
+                };
+
+                var savedJE = await _journalrepo.AddJournalEntrys(journalEntry);
+
+                // 2) Create JournalLines
+                var journalLines = new List<JournalLine>
+                               {
+                              new JournalLine
+                                {
+                                  JournalEntryId = savedJE.Id,
+                                   AccountId = customer,
+                                   Debit = invoice.TotalAmount,
+                                         Credit = 0m
+                                        },
+                              new JournalLine
+                                   {
+                                  JournalEntryId = savedJE.Id,
+                                       AccountId = accounts,
+                                    Debit = 0m,
+                                  Credit = invoice.TotalAmount
+                                       }
+};
+
+                // 3) Save JournalLines
+                await _journalrepo.AddJournalLines(journalLines);
 
                 return new Apiresponse<ADDSalesInvoice>
                 {

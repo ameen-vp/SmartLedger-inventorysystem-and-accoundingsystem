@@ -49,13 +49,10 @@ namespace Infrastructure.Repository
             var customer = await _appDbContext.Costomer.FirstOrDefaultAsync(c => c.CostomerId == id);
             if (customer == null) throw new Exception("Customer not found");
 
-  
-            var accountName = $"Customer-{customer.Name}";
+            if (customer.AccountId == null)
+                throw new Exception("Customer account not linked");
 
-            var account = await _appDbContext.Accounts.FirstOrDefaultAsync(a => a.Name == accountName);
-            if (account == null) throw new Exception("Customer account not found");
-
-            return account.Id;
+            return customer.AccountId.Value;
         }
 
       public async Task<int> GetAccountsId( )
@@ -65,6 +62,35 @@ namespace Infrastructure.Repository
             if (account == null) throw new Exception("Sales revenue account not found");
 
             return account.Id;
+        }
+        public async Task<int> GetVenderId(int id)
+        {
+            var vendor = await _appDbContext.Vendors.FirstOrDefaultAsync(x => x.VendorId == id);
+            if(vendor == null)
+            {
+                throw new Exception("Purchase account not found");
+            }
+            return vendor.VendorId;
+        }
+        public async Task<int> GetAccountsIdByPurchase()
+        {
+            var account = await _appDbContext.Accounts.FirstOrDefaultAsync(z => z.Name.ToLower() == "purchase");
+            if(account == null)
+            {
+                throw new Exception("purchase account not found");
+            }
+            return account.Id;
+        }
+        public async Task<List<Accounts>> GetAccountsByIdsAsync(List<int> accoumids)
+        {
+            try
+            {
+               return
+                    await _appDbContext.Accounts.Where(a => accoumids.Contains(a.Id)).ToListAsync();
+            }catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

@@ -25,6 +25,8 @@ namespace Domain.Models
         public decimal GrantToTal { get; set; }
         public ICollection<PurchaseItems> purchaseItems { get; set; }
 
+        public LedgerEntry LedgerEntry { get; set; }
+
 
     }
 }

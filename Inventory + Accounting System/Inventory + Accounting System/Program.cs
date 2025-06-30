@@ -56,6 +56,10 @@ builder.Services.AddScoped<IAccountRepo, AccountRepo>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ILedgerRepo, LedgerREpo>();
 builder.Services.AddScoped<ILedgerSErvice, LedgerSErvice>();
+builder.Services.AddScoped<IJournalentryService, journalEntryService>();
+builder.Services.AddScoped<IJournalEntrysRepo, JournalEntryRepo>();
+builder.Services.AddScoped<IProfitlossRepo, ProfitAndLossRepo>();
+
 
 
 

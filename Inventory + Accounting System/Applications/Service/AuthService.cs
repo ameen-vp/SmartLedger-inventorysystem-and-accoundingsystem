@@ -12,8 +12,11 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Applications.Helpers;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Applications.Service
 {
@@ -23,22 +26,35 @@ namespace Applications.Service
         private readonly IAuthRepo _authRepo;
         private readonly IMapper _mapper;
 
-       
+        private readonly byte[] _encryptionKey;
+        private readonly byte[] _encryptionIV;
 
         public AuthService(IConfiguration configuration, IMapper mapper, IAuthRepo authRepo)
         {
             _configuration = configuration;
             _mapper = mapper;
             _authRepo = authRepo;
-        }
 
+            _encryptionKey = Convert.FromBase64String(_configuration["EncryptionSettings:Key"]);
+            _encryptionIV = Convert.FromBase64String(_configuration["EncryptionSettings:IV"]);
+        }
+        private string HashEmail(string email)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                var bytes = Encoding.UTF8.GetBytes(email.ToLower().Trim());
+                var hash = sha256.ComputeHash(bytes);
+                return Convert.ToBase64String(hash);
+            }
+        }
         public async Task<Apiresponse<string>> Register(UserregisterDto userregisterDto)
         {
             try
             {
 
                 userregisterDto.Name = userregisterDto.Name.Trim().ToUpper();
-                userregisterDto.Email = userregisterDto.Email.Trim().ToLower();
+                var hashedEmail = HashEmail(userregisterDto.Email);
+                userregisterDto.Email = hashedEmail;
                 userregisterDto.Password = userregisterDto.Password.Trim();
 
 
@@ -59,7 +75,8 @@ namespace Applications.Service
                 user.Password = hashedPassword;
                 string refreshToken = Generate_RefreshToken();
                 var refreshTokenExpiryDays = int.Parse(_configuration["JwtSettings:RefreshTokenExpiryDays"]);
-                user.RefreshToken = refreshToken;
+                user.RefreshToken = SymmetricEncryptionHelper.Encrypt(refreshToken, _encryptionKey, _encryptionIV);
+
                 user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(refreshTokenExpiryDays);
 
                 await _authRepo.Register(user);
@@ -93,7 +110,9 @@ namespace Applications.Service
                 logindto.Email = logindto.Email.ToLower().Trim();
                 logindto.Password = logindto.Password.Trim();
 
-                var user = await _authRepo.Getemail(logindto.Email);
+
+                var hashedEmail = HashEmail(logindto.Email);
+                var user = await _authRepo.Getemail(hashedEmail);
                 if (user == null)
                 {
                     return new Apiresponse<UserResponsedto>{Data = null, Message = "User not found", Statuscode = 404, Success = false};
@@ -108,10 +127,11 @@ namespace Applications.Service
                 var refreshTokenExpiryDays = int.Parse(_configuration["JwtSettings:RefreshTokenExpiryDays"]);
                 var refreshTokenExpiryTime = DateTime.UtcNow.AddDays(refreshTokenExpiryDays);
 
-                user.RefreshToken = refreshToken;
+                user.RefreshToken = SymmetricEncryptionHelper.Encrypt(refreshToken, _encryptionKey, _encryptionIV);
+
                 user.RefreshTokenExpiryTime = refreshTokenExpiryTime;
                 await _authRepo.Updateuser(user);
-
+              
 
                 return new Apiresponse<UserResponsedto>
                 {
@@ -122,7 +142,7 @@ namespace Applications.Service
                     {
                         Id = user.Id,
                         UserName = user.Name,
-                        UserEmail = user.Email,
+                        UserEmail = logindto.Email,
                         Token = token,
                         RefreshToken = refreshToken,
                         RefreshTokenExpiryTime = refreshTokenExpiryTime
@@ -206,6 +226,7 @@ namespace Applications.Service
             return await _authRepo.Getusers();
          
         }
+      
         public async Task<Apiresponse<TokenResponseDto>> RefreshToken(RefreshTokenRequestDto refreshTokenRequestDto)
         {
             try
@@ -224,7 +245,9 @@ namespace Applications.Service
                     };
                 }
 
-                var user = await _authRepo.Getemail(email);
+                var hashedEmail = HashEmail(email);
+                var user = await _authRepo.Getemail(hashedEmail);
+
                 if (user == null)
                 {
                     return new Apiresponse<TokenResponseDto>
@@ -236,7 +259,8 @@ namespace Applications.Service
                     };
                 }
 
-                if (user.RefreshToken != refreshTokenRequestDto.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+                var decryptedStoredToken = SymmetricEncryptionHelper.Decrypt(user.RefreshToken, _encryptionKey, _encryptionIV);
+                if (decryptedStoredToken != refreshTokenRequestDto.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
                 {
                     return new Apiresponse<TokenResponseDto>
                     {
@@ -247,12 +271,14 @@ namespace Applications.Service
                     };
                 }
 
+
                 var newAccessToken = Generate_Token(user);
                 var newRefreshToken = Generate_RefreshToken();
 
                 var refreshTokenExpiryDays = _configuration.GetValue<int>("JwtSettings:RefreshTokenExpiryDays");
 
-                user.RefreshToken = newRefreshToken;
+                user.RefreshToken = SymmetricEncryptionHelper.Encrypt(newRefreshToken, _encryptionKey, _encryptionIV);
+
                 user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(refreshTokenExpiryDays);
                 await _authRepo.Updateuser(user);
 
@@ -301,6 +327,34 @@ namespace Applications.Service
 
             return principal;
         }
+        private string EncryptString(string plainText)
+        {
+            using var aes = Aes.Create();
+            aes.Key = _encryptionKey;
+            aes.IV = _encryptionIV;
+            var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+            using var ms = new MemoryStream();
+            using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
+            using (var sw = new StreamWriter(cs))
+            {
+                sw.Write(plainText);
+            }
+            return Convert.ToBase64String(ms.ToArray());
+        }
+
+        private string DecryptString(string cipherText)
+        {
+            var buffer = Convert.FromBase64String(cipherText);
+            using var aes = Aes.Create();
+            aes.Key = _encryptionKey;
+            aes.IV = _encryptionIV;
+            var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+            using var ms = new MemoryStream(buffer);
+            using var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read);
+            using var sr = new StreamReader(cs);
+            return sr.ReadToEnd();
+        }
+
 
     }
 }

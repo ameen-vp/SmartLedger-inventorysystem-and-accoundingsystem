@@ -33,6 +33,12 @@ namespace Applications.Mapper
             CreateMap<UpdateStatusDto, SalesInvoice>().ReverseMap();
             CreateMap<AddaccountDto, Accounts>().ReverseMap();
             CreateMap<AddLedgerDto, LedgerEntry>().ReverseMap();
+            CreateMap<Vendor, vendeorviewDto>().ReverseMap();
+            CreateMap<JournalDtos, JournalEntry>().ReverseMap();
+            CreateMap<JournalLineDto, JournalLine>().ReverseMap();
+            CreateMap<JournalViewDto, JournalEntry>().ReverseMap();
+            CreateMap<ProfitandLoss, ProfitloassresponseDto>().ReverseMap();
+            CreateMap<ProfitlossRequesDto, ProfitandLoss>().ReverseMap();
         }
     }
 }

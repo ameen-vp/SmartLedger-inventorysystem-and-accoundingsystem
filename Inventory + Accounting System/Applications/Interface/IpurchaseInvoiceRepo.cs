@@ -9,7 +9,7 @@ namespace Applications.Interface
 {
    public interface IpurchaseInvoiceRepo
     {
-        Task AddInvoice(PurchaseInvoice purchaseInvoice);
+        Task<PurchaseInvoice> AddInvoice(PurchaseInvoice purchaseInvoice);
 
         Task<Vendor> GetvendorsId(int vendorId);
 
